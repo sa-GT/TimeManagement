@@ -1,0 +1,53 @@
+﻿@model TimeManagement.Models.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h2>Edit Profile</h2>
+
+<form asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+    @if (!string.IsNullOrEmpty(Model.CurrentImagePath))
+    {
+        <img src="@Model.CurrentImagePath" width="120" class="rounded-circle shadow" />
+    }
+
+    <div class="mb-3">
+        <label>Upload New Profile Picture</label>
+        <input asp-for="ProfileImage" type="file" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Phone</label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Department</label>
+        <input asp-for="Department" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Position</label>
+        <input asp-for="Position" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Language</label>
+        <select asp-for="LanguagePreference" class="form-control">
+            <option value="en">English</option>
+            <option value="ar">Arabic</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+</form>

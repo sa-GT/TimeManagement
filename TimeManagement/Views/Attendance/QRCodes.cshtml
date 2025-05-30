@@ -1,0 +1,12 @@
+﻿@model TimeManagement.ViewModels.UserQrViewModel
+@{
+    ViewData["Title"] = "My QR Code";
+}
+
+<h2 class="mb-3">Your Attendance QR Code</h2>
+
+<div class="card text-center p-4 shadow" style="max-width: 400px; margin:auto;">
+    <h4 class="mb-2">@Model.FullName</h4>
+    <img src="@Model.QrBase64" alt="QR for @Model.FullName" class="img-fluid" />
+    <p class="mt-2"><small>User ID: @Model.UserId</small></p>
+</div>
