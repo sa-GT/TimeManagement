@@ -4,6 +4,7 @@ using TimeManagement.Models.ViewModels;
 using QRCoder;
 using System.Text;
 using TimeManagement.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimeManagement.Controllers
 {
@@ -106,35 +107,30 @@ namespace TimeManagement.Controllers
             }
 
             var today = DateOnly.FromDateTime(DateTime.Today);
-            var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
-            // جلب IP الحالي
-            var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+            // ❌ تعليق كود التحقق من الـ IP
+            /*
+            var currentIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                             ?? HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            // التحقق إذا كان هناك موظف آخر استخدم نفس الـ IP اليوم
-            var conflict = _context.Users
-                .Where(u => u.Ipaddress == currentIp && u.Id != userId)
-                .Any();
+            var conflict = _context.Attendances
+                .Include(a => a.User)
+                .Any(a => a.Date == today && a.User.Ipaddress == currentIp && a.UserId != userId);
 
             if (conflict)
             {
-                ViewBag.Message = "⛔ This device has already been used for another employee today.";
+                ViewBag.Message = $"⛔ This device (IP: {currentIp}) has already been used for another employee today.";
                 ViewBag.Status = "error";
                 return View("QRResult");
             }
+            */
+
+            var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
             string message, status;
 
             if (record == null)
             {
-                // تخزين IP المستخدم
-                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-                if (user != null)
-                {
-                    user.Ipaddress = currentIp;
-                    user.UpdatedAt = DateTime.Now;
-                }
-
                 _context.Attendances.Add(new Attendance
                 {
                     UserId = userId.Value,
@@ -171,6 +167,7 @@ namespace TimeManagement.Controllers
             ViewBag.Status = status;
             return View("QRResult");
         }
+
 
         public IActionResult QRCodes()
         {

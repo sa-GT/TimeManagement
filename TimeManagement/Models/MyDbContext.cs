@@ -522,9 +522,6 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("first_name");
-            entity.Property(e => e.Ipaddress)
-                .HasMaxLength(50)
-                .HasColumnName("IPAddress");
             entity.Property(e => e.JoiningDate).HasColumnName("joining_date");
             entity.Property(e => e.LanguagePreference)
                 .HasMaxLength(10)

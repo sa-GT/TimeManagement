@@ -39,7 +39,10 @@ namespace TimeManagement.Controllers
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("Role", user.Role);
 
-            return RedirectToAction("Profile", "Profile"); 
+            if (user.Role == "admin")
+                return RedirectToAction("EmployeeAttendanceList","AdminAttendance"); 
+            else
+                return RedirectToAction("Profile", "Profile");
         }
 
         public IActionResult Logout()

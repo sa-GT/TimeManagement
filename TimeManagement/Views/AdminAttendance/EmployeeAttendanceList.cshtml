@@ -1,0 +1,57 @@
+﻿@model List<TimeManagement.ViewModels.AdminAttendanceViewModel>
+@{
+    ViewData["Title"] = "Employee Attendance List";
+    Layout = "_AdminLayout";
+}
+
+<h2 class="mb-4">Employee Attendance List</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Employee Name</th>
+            <th>Date</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.FullName</td>
+                    <td>@item.Date.ToShortDateString()</td>
+                    <td>@(item.CheckIn?.ToString("hh:mm tt") ?? "-")</td>
+                    <td>@(item.CheckOut?.ToString("hh:mm tt") ?? "-")</td>
+                    <td>
+                        @if (item.Status == "Present")
+                        {
+                            <span class="badge bg-success">Present</span>
+                        }
+                        else if (item.Status == "Incomplete")
+                        {
+                            <span class="badge bg-warning text-dark">Incomplete</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Absent</span>
+                        }
+                    </td>
+                </tr>
+                i++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No attendance records found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
