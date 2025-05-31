@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Attendance Result";
+    var message = Html.Raw(ViewBag.Message ?? "Unknown result");
+    var status = Html.Raw(ViewBag.Status ?? "info");
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    Swal.fire({
+        icon: '@status',
+        title: '@message',
+        showConfirmButton: false,
+        timer: 2500
+    }).then(() => {
+        window.location.href = "/Attendance/Attendance";
+    });
+</script>

@@ -1,0 +1,27 @@
+﻿@model TimeManagement.Models.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2>My Profile</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.CurrentImagePath))
+{
+    <img src="@Model.CurrentImagePath" width="120" class="rounded-circle shadow" />
+}
+
+<table class="table table-bordered">
+    <tr><th>First Name</th><td>@Model.FirstName</td></tr>
+    <tr><th>Last Name</th><td>@Model.LastName</td></tr>
+    <tr><th>Phone</th><td>@Model.Phone</td></tr>
+    <tr><th>Department</th><td>@Model.Department</td></tr>
+    <tr><th>Position</th><td>@Model.Position</td></tr>
+    <tr><th>Language</th><td>@Model.LanguagePreference</td></tr>
+</table>
+
+<a href="/Profile/UpdateProfile" class="btn btn-primary">Edit Profile</a>

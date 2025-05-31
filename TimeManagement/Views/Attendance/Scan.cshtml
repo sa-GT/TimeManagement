@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "QR Attendance Scanner";
+}
+
+<h2 class="mb-3">Scan Your QR Code</h2>
+
+<div id="reader" style="width: 300px;"></div>
+<div id="result" class="mt-3"></div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.7/html5-qrcode.min.js"></script>
+
+<script>
+    let alreadyScanned = false;
+
+    function onScanSuccess(decodedText, decodedResult) {
+        if (alreadyScanned) return;
+
+        alreadyScanned = true;
+        document.getElementById("result").innerHTML =
+            `<span class='text-success'>Scanned: ${decodedText}</span>`;
+
+        setTimeout(() => {
+            window.location.href = decodedText;
+        }, 1000);
+
+        html5QrcodeScanner.clear().catch(err => console.warn("Clear error:", err));
+    }
+
+    function onScanError(errorMessage) {
+        // Ignore minor scan errors
+    }
+
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 10, qrbox: 250 },
+        false
+    );
+
+    html5QrcodeScanner.render(onScanSuccess, onScanError);
+</script>
