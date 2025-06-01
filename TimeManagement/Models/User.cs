@@ -41,15 +41,21 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
+    public int? ManagerId { get; set; }
+
     public virtual ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();
 
     public virtual ICollection<Attendance> AttendanceApprovedByNavigations { get; set; } = new List<Attendance>();
 
     public virtual ICollection<Attendance> AttendanceUsers { get; set; } = new List<Attendance>();
 
+    public virtual ICollection<User> InverseManager { get; set; } = new List<User>();
+
     public virtual ICollection<LeaveRequest> LeaveRequestApprovedByNavigations { get; set; } = new List<LeaveRequest>();
 
     public virtual ICollection<LeaveRequest> LeaveRequestUsers { get; set; } = new List<LeaveRequest>();
+
+    public virtual User? Manager { get; set; }
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 

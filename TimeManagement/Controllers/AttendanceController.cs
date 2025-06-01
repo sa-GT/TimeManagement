@@ -7,209 +7,206 @@ using TimeManagement.ViewModels;
 
 namespace TimeManagement.Controllers
 {
-    public class AttendanceController : Controller
-    {
-        private readonly MyDbContext _context;
+	public class AttendanceController : Controller
+	{
+		private readonly MyDbContext _context;
 
-        public AttendanceController(MyDbContext context)
-        {
-            _context = context;
-        }
+		public AttendanceController(MyDbContext context)
+		{
+			_context = context;
+		}
 
-        public IActionResult Attendance()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+		public IActionResult Attendance()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var records = _context.Attendances
-                            .Where(a => a.UserId == userId)
-                            .OrderByDescending(a => a.Date)
-                            .ToList();
+			var today = DateOnly.FromDateTime(DateTime.Today);
+			var records = _context.Attendances
+							.Where(a => a.UserId == userId)
+							.OrderByDescending(a => a.Date)
+							.ToList();
 
-            var todayRecord = records.FirstOrDefault(a => a.Date == today);
+			var todayRecord = records.FirstOrDefault(a => a.Date == today);
 
-            var model = new AttendanceViewModel
-            {
-                Records = records,
-                TodayRecord = todayRecord,
-                CanCheckIn = todayRecord == null,
-                CanCheckOut = todayRecord != null && todayRecord.CheckIn.HasValue && !todayRecord.CheckOut.HasValue
-            };
+			var model = new AttendanceViewModel
+			{
+				Records = records,
+				TodayRecord = todayRecord,
+				CanCheckIn = todayRecord == null,
+				CanCheckOut = todayRecord != null && todayRecord.CheckIn.HasValue && !todayRecord.CheckOut.HasValue
+			};
 
-            return View(model);
-        }
+			return View(model);
+		}
 
-        [HttpPost]
-        public IActionResult CheckIn()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+		[HttpPost]
+		public IActionResult CheckIn()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            if (_context.Attendances.Any(a => a.UserId == userId && a.Date == today))
-                return RedirectToAction("Attendance");
+			var today = DateOnly.FromDateTime(DateTime.Today);
+			if (_context.Attendances.Any(a => a.UserId == userId && a.Date == today))
+				return RedirectToAction("Attendance");
 
-            _context.Attendances.Add(new Attendance
-            {
-                UserId = userId.Value,
-                Date = today,
-                CheckIn = DateTime.Now,
-                Status = "present",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            });
+			_context.Attendances.Add(new Attendance
+			{
+				UserId = userId.Value,
+				Date = today,
+				CheckIn = DateTime.Now,
+				Status = "present",
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now
+			});
 
-            _context.SaveChanges();
-            return RedirectToAction("Attendance");
-        }
+			_context.SaveChanges();
+			return RedirectToAction("Attendance");
+		}
 
-        [HttpPost]
-        public IActionResult CheckOut()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+		[HttpPost]
+		public IActionResult CheckOut()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
+			var today = DateOnly.FromDateTime(DateTime.Today);
+			var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
-            if (record == null || record.CheckOut.HasValue)
-                return RedirectToAction("Attendance");
+			if (record == null || record.CheckOut.HasValue)
+				return RedirectToAction("Attendance");
 
-            record.CheckOut = DateTime.Now;
-            record.UpdatedAt = DateTime.Now;
+			record.CheckOut = DateTime.Now;
+			record.UpdatedAt = DateTime.Now;
 
-            if (record.CheckIn.HasValue)
-            {
-                var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
-                record.WorkHours = Math.Round((decimal)duration, 2);
-            }
+			if (record.CheckIn.HasValue)
+			{
+				var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
+				record.WorkHours = Math.Round((decimal)duration, 2);
+			}
 
-            _context.SaveChanges();
-            return RedirectToAction("Attendance");
-        }
+			_context.SaveChanges();
+			return RedirectToAction("Attendance");
+		}
 
-        [HttpGet]
-        public IActionResult Scan()
-        {
-            return View();
-        }
+		[HttpGet]
+		public IActionResult Scan()
+		{
+			return View();
+		}
 
-        public IActionResult QRScanHandler()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
-            {
-                ViewBag.Message = "⚠️ You must be logged in to scan.";
-                ViewBag.Status = "error";
-                return View("QRResult");
-            }
+		public IActionResult QRScanHandler()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null)
+			{
+				ViewBag.Message = "⚠️ You must be logged in to scan.";
+				ViewBag.Status = "error";
+				return View("QRResult");
+			}
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
+			var today = DateOnly.FromDateTime(DateTime.Today);
 
-            // جلب IP الحالي
-            var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+			// ❌ تعليق كود التحقق من الـ IP
+			/*
+			var currentIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+							 ?? HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            // التحقق إذا كان هناك موظف آخر استخدم نفس الـ IP اليوم
-            var conflict = _context.Users
-                .Where(u => u.Ipaddress == currentIp && u.Id != userId)
-                .Any();
+			var conflict = _context.Attendances
+				.Include(a => a.User)
+				.Any(a => a.Date == today && a.User.Ipaddress == currentIp && a.UserId != userId);
 
-            if (conflict)
-            {
-                ViewBag.Message = "⛔ This device has already been used for another employee today.";
-                ViewBag.Status = "error";
-                return View("QRResult");
-            }
+			if (conflict)
+			{
+				ViewBag.Message = $"⛔ This device (IP: {currentIp}) has already been used for another employee today.";
+				ViewBag.Status = "error";
+				return View("QRResult");
+			}
+			*/
 
-            string message, status;
+			var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
-            if (record == null)
-            {
-                // تخزين IP المستخدم
-                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-                if (user != null)
-                {
-                    user.Ipaddress = currentIp;
-                    user.UpdatedAt = DateTime.Now;
-                }
+			string message, status;
 
-                _context.Attendances.Add(new Attendance
-                {
-                    UserId = userId.Value,
-                    Date = today,
-                    CheckIn = DateTime.Now,
-                    Status = "present",
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
-                });
+			if (record == null)
+			{
+				_context.Attendances.Add(new Attendance
+				{
+					UserId = userId.Value,
+					Date = today,
+					CheckIn = DateTime.Now,
+					Status = "present",
+					CreatedAt = DateTime.Now,
+					UpdatedAt = DateTime.Now
+				});
 
-                _context.SaveChanges();
-                message = "✅ Check-in successful!";
-                status = "success";
-            }
-            else if (record.CheckIn.HasValue && !record.CheckOut.HasValue)
-            {
-                record.CheckOut = DateTime.Now;
-                record.UpdatedAt = DateTime.Now;
+				_context.SaveChanges();
+				message = "✅ Check-in successful!";
+				status = "success";
+			}
+			else if (record.CheckIn.HasValue && !record.CheckOut.HasValue)
+			{
+				record.CheckOut = DateTime.Now;
+				record.UpdatedAt = DateTime.Now;
 
-                var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
-                record.WorkHours = Math.Round((decimal)duration, 2);
+				var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
+				record.WorkHours = Math.Round((decimal)duration, 2);
 
-                _context.SaveChanges();
-                message = "✅ Check-out successful!";
-                status = "success";
-            }
-            else
-            {
-                message = "ℹ️ You have already completed attendance today.";
-                status = "info";
-            }
+				_context.SaveChanges();
+				message = "✅ Check-out successful!";
+				status = "success";
+			}
+			else
+			{
+				message = "ℹ️ You have already completed attendance today.";
+				status = "info";
+			}
 
-            ViewBag.Message = message;
-            ViewBag.Status = status;
-            return View("QRResult");
-        }
+			ViewBag.Message = message;
+			ViewBag.Status = status;
+			return View("QRResult");
+		}
 
-        public IActionResult QRCodes()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            if (user == null) return NotFound();
+		public IActionResult QRCodes()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
-            string qrText = $"{Request.Scheme}://{Request.Host}/Attendance/QRScanHandler";
+			var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+			if (user == null) return NotFound();
 
-            var generator = new QRCodeGenerator();
-            var data = generator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
-            var svgQr = new SvgQRCode(data);
-            string svgContent = svgQr.GetGraphic(4);
-            string base64Svg = Convert.ToBase64String(Encoding.UTF8.GetBytes(svgContent));
+			string qrText = $"{Request.Scheme}://{Request.Host}/Attendance/QRScanHandler";
 
-            var viewModel = new UserQrViewModel
-            {
-                UserId = user.Id,
-                FullName = user.FirstName + " " + user.LastName,
-                QrBase64 = $"data:image/svg+xml;base64,{base64Svg}"
-            };
+			var generator = new QRCodeGenerator();
+			var data = generator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+			var svgQr = new SvgQRCode(data);
+			string svgContent = svgQr.GetGraphic(4);
+			string base64Svg = Convert.ToBase64String(Encoding.UTF8.GetBytes(svgContent));
 
-            return View(viewModel);
-        }
+			var viewModel = new UserQrViewModel
+			{
+				UserId = user.Id,
+				FullName = user.FirstName + " " + user.LastName,
+				QrBase64 = $"data:image/svg+xml;base64,{base64Svg}"
+			};
 
-        // ✳️ إلغاء QRCheckIn(uid)
-        public IActionResult QRCheckIn(int uid)
-        {
-            return RedirectToAction("QRScanHandler");
-        }
+			return View(viewModel);
+		}
 
-        public IActionResult QRResult()
-        {
-            ViewBag.Status = "info";
-            ViewBag.Message = "QR scan complete.";
+		// ✳️ إلغاء QRCheckIn(uid)
+		public IActionResult QRCheckIn(int uid)
+		{
+			return RedirectToAction("QRScanHandler");
+		}
 
-            return View();
-        }
-    }
+		public IActionResult QRResult()
+		{
+			ViewBag.Status = "info";
+			ViewBag.Message = "QR scan complete.";
+
+			return View();
+		}
+	}
+
 }
