@@ -4,6 +4,7 @@ using TimeManagement.Models.ViewModels;
 using QRCoder;
 using System.Text;
 using TimeManagement.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimeManagement.Controllers
 {
@@ -105,40 +106,45 @@ namespace TimeManagement.Controllers
 				return View("QRResult");
 			}
 
-			var today = DateOnly.FromDateTime(DateTime.Today);
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
-			// ❌ تعليق كود التحقق من الـ IP
-			/*
-			var currentIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
-							 ?? HttpContext.Connection.RemoteIpAddress?.ToString();
+            // جلب IP الحالي
+            var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-			var conflict = _context.Attendances
-				.Include(a => a.User)
-				.Any(a => a.Date == today && a.User.Ipaddress == currentIp && a.UserId != userId);
+            // التحقق إذا كان هناك موظف آخر استخدم نفس الـ IP اليوم
+            var conflict = _context.Users
+                .Where(u => u.Ipaddress == currentIp && u.Id != userId)
+                .Any();
 
-			if (conflict)
-			{
-				ViewBag.Message = $"⛔ This device (IP: {currentIp}) has already been used for another employee today.";
-				ViewBag.Status = "error";
-				return View("QRResult");
-			}
-			*/
-
-			var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
+            if (conflict)
+            {
+                ViewBag.Message = "⛔ This device has already been used for another employee today.";
+                ViewBag.Status = "error";
+                return View("QRResult");
+            }
 
 			string message, status;
 
-			if (record == null)
-			{
-				_context.Attendances.Add(new Attendance
-				{
-					UserId = userId.Value,
-					Date = today,
-					CheckIn = DateTime.Now,
-					Status = "present",
-					CreatedAt = DateTime.Now,
-					UpdatedAt = DateTime.Now
-				});
+            if (record == null)
+            {
+                // تخزين IP المستخدم
+                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+                if (user != null)
+                {
+                    user.Ipaddress = currentIp;
+                    user.UpdatedAt = DateTime.Now;
+                }
+
+                _context.Attendances.Add(new Attendance
+                {
+                    UserId = userId.Value,
+                    Date = today,
+                    CheckIn = DateTime.Now,
+                    Status = "present",
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                });
 
 				_context.SaveChanges();
 				message = "✅ Check-in successful!";
@@ -167,11 +173,10 @@ namespace TimeManagement.Controllers
 			return View("QRResult");
 		}
 
-
-		public IActionResult QRCodes()
-		{
-			var userId = HttpContext.Session.GetInt32("UserId");
-			if (userId == null) return RedirectToAction("Login", "Auth");
+        public IActionResult QRCodes()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Login", "Auth");
 
 			var user = _context.Users.FirstOrDefault(u => u.Id == userId);
 			if (user == null) return NotFound();
