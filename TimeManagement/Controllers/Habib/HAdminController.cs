@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TimeManagement.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimeManagement.Controllers.Habib
 {
@@ -14,12 +15,12 @@ namespace TimeManagement.Controllers.Habib
 			this.myDbContext = myDbContext;
 			this._env = env; 
 		}
-		public IActionResult Projectlist()
+		public async Task<IActionResult> Projectlist()
 		{
-			var all_projects = myDbContext.Projects.ToList();
-			var all_project_memmber = myDbContext.ProjectMembers.ToList();
-			var all_users = myDbContext.Users.ToList();
-			var all_projectsDocs = myDbContext.ProjectDocuments.ToList();
+			var all_projects = await myDbContext.Projects.ToListAsync();
+			var all_project_memmber = await myDbContext.ProjectMembers.ToListAsync();
+			var all_users = await myDbContext.Users.ToListAsync();
+			var all_projectsDocs = await myDbContext.ProjectDocuments.ToListAsync();
 			var model = Tuple.Create(all_projects, all_project_memmber, all_users,all_projectsDocs);
 			return View(model);
 		}
@@ -111,7 +112,7 @@ namespace TimeManagement.Controllers.Habib
 			}
 			return RedirectToAction("Projectlist");
 		}
-		public IActionResult TaskManagement()
+		public IActionResult ViewAllEmployee()
 		{
 			return View();
 		}

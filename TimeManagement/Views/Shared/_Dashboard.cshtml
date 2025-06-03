@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="~/assets/css/timetracker.style.min.css">
     <!-- Please Remove the code Google Code  -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-264428387-1"></script>
+    @* ------------------------ *@
+    @RenderSection("Styles", required: false)
+    <!-- Please Remove the code Google Code  -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-264428387-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -626,7 +630,8 @@
     <!-- Jquery Page Js -->
     <script src="~/js/template.js"></script>
     <script src="~/js/page/dashboard.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 
 <!-- Mirrored from www.pixelwibes.com/template/timetracker/html/dist/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 19 Mar 2025 21:56:49 GMT -->
-</html> 
+</html>
