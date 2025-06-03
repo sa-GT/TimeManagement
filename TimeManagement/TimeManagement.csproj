@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Ali\" />
     <Folder Include="Controllers\Ahmad\" />
     <Folder Include="Controllers\Habib\" />
     <Folder Include="wwwroot\uploads\" />
