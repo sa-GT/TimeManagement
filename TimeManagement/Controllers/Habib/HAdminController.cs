@@ -111,6 +111,9 @@ namespace TimeManagement.Controllers.Habib
 			}
 			return RedirectToAction("Projectlist");
 		}
+		public IActionResult TaskManagement()
+		{
+			return View();
+		}
 	}
-
 }

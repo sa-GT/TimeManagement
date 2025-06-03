@@ -31,13 +31,11 @@ namespace TimeManagement.Controllers
                 Department = user.Department,
                 Position = user.Position,
                 LanguagePreference = user.LanguagePreference,
-                CurrentImagePath = user.ProfilePicture // هذا المهم
+                CurrentImagePath = user.ProfilePicture
             };
-
 
             return View(model);
         }
-
 
         [HttpGet]
         public IActionResult UpdateProfile()
@@ -59,9 +57,8 @@ namespace TimeManagement.Controllers
                 CurrentImagePath = user.ProfilePicture
             };
 
-            return View(model); 
+            return View(model);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(ProfileViewModel model)
@@ -80,21 +77,23 @@ namespace TimeManagement.Controllers
             user.LanguagePreference = model.LanguagePreference;
             user.UpdatedAt = DateTime.Now;
 
-            // معالجة الصورة
+            // ✅ حفظ صورة الوجه إذا كانت صحيحة
+            if (!string.IsNullOrWhiteSpace(model.FaceImageBase64) && model.FaceImageBase64.StartsWith("data:image"))
+            {
+                user.FaceImage = model.FaceImageBase64;
+            }
+
+            // ✅ حفظ صورة الملف الشخصي
             if (model.ProfileImage != null)
             {
                 var cleanFileName = Path.GetFileNameWithoutExtension(model.ProfileImage.FileName)
-                                          .Replace(" ", "_")
-                                          .Replace("?", "")
-                                          .Replace(":", "")
-                                          .Replace("/", "")
-                                          .Replace("\\", "");
+                    .Replace(" ", "_").Replace("?", "").Replace(":", "").Replace("/", "").Replace("\\", "");
 
                 var fileExt = Path.GetExtension(model.ProfileImage.FileName);
                 var fileName = $"{Guid.NewGuid()}_{cleanFileName}{fileExt}";
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                using (var stream = new FileStream(savePath, FileMode.Create))
                 {
                     await model.ProfileImage.CopyToAsync(stream);
                 }
@@ -103,10 +102,9 @@ namespace TimeManagement.Controllers
             }
 
             _context.SaveChanges();
+
             TempData["Success"] = "Profile updated successfully!";
             return RedirectToAction("Profile");
         }
-
-
     }
 }

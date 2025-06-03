@@ -27,24 +27,21 @@
             border-radius: 12px;
             box-shadow: 0 0 30px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
 
-            .login-card h2 {
-                font-weight: 700;
-                margin-bottom: 1.5rem;
-                color: #333;
-                text-align: center;
-            }
-
-        .form-control {
-            border-radius: 8px;
-        }
-
-        .btn-primary {
+        .btn-primary, .btn-outline-dark {
             width: 100%;
             border-radius: 8px;
             padding: 0.6rem;
+            margin-top: 8px;
+        }
+
+        video {
+            display: none;
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
         }
 
         .alert {
@@ -55,14 +52,14 @@
 <body>
 
     <div class="login-card">
-        <h2>Welcome Back</h2>
+        <h2 class="text-center mb-3 fw-bold">Welcome Back</h2>
 
         @if (ViewBag.Error != null)
         {
-            <div class="alert alert-danger">@ViewBag.Error</div>
+            <div class="alert alert-danger text-center">@ViewBag.Error</div>
         }
 
-        <form asp-action="Login" method="post">
+        <form asp-action="Login" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input asp-for="Email" class="form-control" placeholder="example@email.com" />
@@ -73,8 +70,43 @@
                 <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
             </div>
 
+            <input type="hidden" name="FaceImageBase64" id="faceInput" />
+
             <button type="submit" class="btn btn-primary">Sign In</button>
+            <button type="button" class="btn btn-outline-dark" onclick="captureFace()">👁️ Login with Face</button>
+
+            <video id="video" autoplay muted></video>
         </form>
+
+        <script>
+            async function captureFace() {
+                const video = document.getElementById("video");
+                video.style.display = "block";
+
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+
+                setTimeout(() => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(video, 0, 0);
+
+                    const base64Image = canvas.toDataURL("image/png");
+                    document.getElementById("faceInput").value = base64Image;
+
+                    // إزالة الإيميل والباسورد عند تسجيل الدخول بالوجه
+                    document.querySelector("input[name='Email']").value = "";
+                    document.querySelector("input[name='Password']").value = "";
+
+                    stream.getTracks().forEach(track => track.stop());
+                    video.style.display = "none";
+
+                    document.querySelector("form").submit();
+                }, 3000);
+            }
+        </script>
     </div>
 
 </body>
