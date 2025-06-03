@@ -113,28 +113,28 @@ namespace TimeManagement.Controllers
             var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
 
             // التحقق إذا كان هناك موظف آخر استخدم نفس الـ IP اليوم
-            var conflict = _context.Users
-                .Where(u => u.Ipaddress == currentIp && u.Id != userId)
-                .Any();
+            //var conflict = _context.Users
+            //    .Where(u => u.Ipaddress == currentIp && u.Id != userId)
+            //    .Any();
 
-            if (conflict)
-            {
-                ViewBag.Message = "⛔ This device has already been used for another employee today.";
-                ViewBag.Status = "error";
-                return View("QRResult");
-            }
+            //if (conflict)
+            //{
+            //    ViewBag.Message = "⛔ This device has already been used for another employee today.";
+            //    ViewBag.Status = "error";
+            //    return View("QRResult");
+            //}
 
 			string message, status;
 
             if (record == null)
             {
                 // تخزين IP المستخدم
-                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-                if (user != null)
-                {
-                    user.Ipaddress = currentIp;
-                    user.UpdatedAt = DateTime.Now;
-                }
+                //var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+                //if (user != null)
+                //{
+                //    user.Ipaddress = currentIp;
+                //    user.UpdatedAt = DateTime.Now;
+                //}
 
                 _context.Attendances.Add(new Attendance
                 {
