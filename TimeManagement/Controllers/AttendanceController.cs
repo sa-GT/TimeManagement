@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TimeManagement.Models;
-using TimeManagement.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using System.Text;
+using TimeManagement.Models;
+using TimeManagement.Models.ViewModels;
 using TimeManagement.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace TimeManagement.Controllers
 {
-	public class AttendanceController : Controller
-	{
-		private readonly MyDbContext _context;
+    public class AttendanceController : Controller
+    {
+        private readonly MyDbContext _context;
+        private static Dictionary<string, int> tokenStore = new(); // Token-to-UserId مؤقت
 
 		public AttendanceController(MyDbContext context)
 		{
@@ -22,11 +23,11 @@ namespace TimeManagement.Controllers
 			var userId = HttpContext.Session.GetInt32("UserId");
 			if (userId == null) return RedirectToAction("Login", "Auth");
 
-			var today = DateOnly.FromDateTime(DateTime.Today);
-			var records = _context.Attendances
-							.Where(a => a.UserId == userId)
-							.OrderByDescending(a => a.Date)
-							.ToList();
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var records = _context.Attendances
+                .Where(a => a.UserId == userId)
+                .OrderByDescending(a => a.Date)
+                .ToList();
 
 			var todayRecord = records.FirstOrDefault(a => a.Date == today);
 
@@ -90,55 +91,40 @@ namespace TimeManagement.Controllers
 			return RedirectToAction("Attendance");
 		}
 
-		[HttpGet]
-		public IActionResult Scan()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult Scan() => View();
 
-		public IActionResult QRScanHandler()
-		{
-			var userId = HttpContext.Session.GetInt32("UserId");
-			if (userId == null)
-			{
-				ViewBag.Message = "⚠️ You must be logged in to scan.";
-				ViewBag.Status = "error";
-				return View("QRResult");
-			}
+        // ✅ QR Code Handler using Token
+        public IActionResult QRScanHandler(string? token)
+        {
+            if (string.IsNullOrEmpty(token) || !tokenStore.ContainsKey(token))
+            {
+                ViewBag.Message = "❌ QR Code expired or invalid.";
+                ViewBag.Status = "error";
+                return View("QRResult");
+            }
+
+            int userId = tokenStore[token];
+            tokenStore.Remove(token); // ♻️ احذف التوكن بعد الاستخدام
 
             var today = DateOnly.FromDateTime(DateTime.Today);
             var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
-
-            // جلب IP الحالي
-            var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
-
-            // التحقق إذا كان هناك موظف آخر استخدم نفس الـ IP اليوم
-            //var conflict = _context.Users
-            //    .Where(u => u.Ipaddress == currentIp && u.Id != userId)
-            //    .Any();
-
-            //if (conflict)
-            //{
-            //    ViewBag.Message = "⛔ This device has already been used for another employee today.";
-            //    ViewBag.Status = "error";
-            //    return View("QRResult");
-            //}
 
 			string message, status;
 
             if (record == null)
             {
                 // تخزين IP المستخدم
-                //var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-                //if (user != null)
-                //{
-                //    user.Ipaddress = currentIp;
-                //    user.UpdatedAt = DateTime.Now;
-                //}
+                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+                if (user != null)
+                {
+                    //user.Ipaddress = currentIp;
+                    user.UpdatedAt = DateTime.Now;
+                }
 
                 _context.Attendances.Add(new Attendance
                 {
-                    UserId = userId.Value,
+                    UserId = userId,
                     Date = today,
                     CheckIn = DateTime.Now,
                     Status = "present",
@@ -173,6 +159,27 @@ namespace TimeManagement.Controllers
 			return View("QRResult");
 		}
 
+        // ✅ Dynamic QR Generator (used in <img src> via JS)
+        [HttpGet]
+        public IActionResult GetDynamicQr()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return Unauthorized();
+
+            string token = Guid.NewGuid().ToString();
+            tokenStore[token] = userId.Value;
+
+            string qrUrl = $"{Request.Scheme}://{Request.Host}/Attendance/QRScanHandler?token={token}";
+
+            var generator = new QRCodeGenerator();
+            var data = generator.CreateQrCode(qrUrl, QRCodeGenerator.ECCLevel.Q);
+            var qrPng = new PngByteQRCode(data);
+            byte[] qrBytes = qrPng.GetGraphic(20);
+
+            return File(qrBytes, "image/png");
+        }
+
+        // ✅ صفحة عرض QR Code (تستخدم GetDynamicQr في <img>)
         public IActionResult QRCodes()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -181,37 +188,24 @@ namespace TimeManagement.Controllers
 			var user = _context.Users.FirstOrDefault(u => u.Id == userId);
 			if (user == null) return NotFound();
 
-			string qrText = $"{Request.Scheme}://{Request.Host}/Attendance/QRScanHandler";
-
-			var generator = new QRCodeGenerator();
-			var data = generator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
-			var svgQr = new SvgQRCode(data);
-			string svgContent = svgQr.GetGraphic(4);
-			string base64Svg = Convert.ToBase64String(Encoding.UTF8.GetBytes(svgContent));
-
-			var viewModel = new UserQrViewModel
-			{
-				UserId = user.Id,
-				FullName = user.FirstName + " " + user.LastName,
-				QrBase64 = $"data:image/svg+xml;base64,{base64Svg}"
-			};
+            var viewModel = new UserQrViewModel
+            {
+                UserId = user.Id,
+                FullName = $"{user.FirstName} {user.LastName}",
+                QrBase64 = "" // سيتم تحميله عبر <img src="/Attendance/GetDynamicQr">
+            };
 
 			return View(viewModel);
 		}
 
-		// ✳️ إلغاء QRCheckIn(uid)
-		public IActionResult QRCheckIn(int uid)
-		{
-			return RedirectToAction("QRScanHandler");
-		}
+        // ✅ إعادة التوجيه لو دخل شخص على رابط قديم
+        public IActionResult QRCheckIn(int uid) => RedirectToAction("QRScanHandler");
 
-		public IActionResult QRResult()
-		{
-			ViewBag.Status = "info";
-			ViewBag.Message = "QR scan complete.";
-
-			return View();
-		}
-	}
-
+        public IActionResult QRResult()
+        {
+            ViewBag.Status = "info";
+            ViewBag.Message = "QR scan complete.";
+            return View();
+        }
+    }
 }

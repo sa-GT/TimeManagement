@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TimeManagement.Models;
-using TimeManagement.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using TimeManagement.Models;
+using TimeManagement.ViewModels;
+using System;
 
 namespace TimeManagement.Controllers
 {
@@ -24,25 +25,50 @@ namespace TimeManagement.Controllers
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            User? user = null;
 
-            var user = _context.Users
-                .FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+            bool hasEmailAndPassword = !string.IsNullOrWhiteSpace(model.Email) && !string.IsNullOrWhiteSpace(model.Password);
+            bool hasFace = !string.IsNullOrWhiteSpace(model.FaceImageBase64);
 
+            // ✅ تسجيل الدخول بالبريد والباسورد فقط
+            if (hasEmailAndPassword && !hasFace)
+            {
+                user = _context.Users.FirstOrDefault(u =>
+                    u.Email.ToLower() == model.Email.ToLower() &&
+                    u.Password == model.Password);
+            }
+
+            // ✅ تسجيل الدخول بالوجه فقط
+            else if (hasFace && !hasEmailAndPassword)
+            {
+                var usersWithFace = _context.Users
+                    .Where(u => u.FaceImage != null)
+                    .ToList();
+
+                foreach (var u in usersWithFace)
+                {
+                    if (u.FaceImage == model.FaceImageBase64) // مقارنة نصية مبدئية
+                    {
+                        user = u;
+                        break;
+                    }
+                }
+            }
+
+            // ❌ لم يتم التحقق
             if (user == null)
             {
-                ViewBag.Error = "Invalid email or password";
+                ViewBag.Error = "❌ Invalid credentials or face not recognized.";
                 return View(model);
             }
 
+            // ✅ تسجيل دخول ناجح
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("Role", user.Role);
 
-            if (user.Role == "admin")
-                return RedirectToAction("EmployeeAttendanceList","AdminAttendance"); 
-            else
-                return RedirectToAction("Profile", "Profile");
+            return user.Role == "admin"
+                ? RedirectToAction("EmployeeAttendanceList", "AdminAttendance")
+                : RedirectToAction("Profile", "Profile");
         }
 
         public IActionResult Logout()

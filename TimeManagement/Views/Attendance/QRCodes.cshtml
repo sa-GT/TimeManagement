@@ -3,10 +3,45 @@
     ViewData["Title"] = "My QR Code";
 }
 
-<h2 class="mb-3">Your Attendance QR Code</h2>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<div class="card text-center p-4 shadow" style="max-width: 400px; margin:auto;">
-    <h4 class="mb-2">@Model.FullName</h4>
-    <img src="@Model.QrBase64" alt="QR for @Model.FullName" class="img-fluid" />
-    <p class="mt-2"><small>User ID: @Model.UserId</small></p>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4 text-center" style="max-width: 420px; width: 100%; border-radius: 20px;">
+        <h2 class="text-primary fw-bold mb-3">📲 Your Attendance QR</h2>
+
+        <div class="border bg-light p-3 rounded mb-3">
+            <img id="qrImage" src="/Attendance/GetDynamicQr" alt="QR Code"
+                 class="img-fluid" style="max-height: 260px; transition: 0.3s ease-in-out;" />
+            <div class="text-muted small mt-2" id="refreshNote">⏳ Next refresh in 20s</div>
+        </div>
+
+        <h5 class="fw-semibold">@Model.FullName</h5>
+        <p class="text-muted mb-2">🆔 User ID: <strong>@Model.UserId</strong></p>
+
+        <a href="/" class="btn btn-outline-primary mt-2 px-4">🔙 Back to Home</a>
+    </div>
 </div>
+
+<script>
+    let refreshCountdown = 20;
+    const note = document.getElementById("refreshNote");
+
+    function refreshQR() {
+        const qr = document.getElementById("qrImage");
+        qr.style.opacity = 0.5;
+
+        setTimeout(() => {
+            qr.src = "/Attendance/GetDynamicQr?" + new Date().getTime();
+            qr.onload = () => { qr.style.opacity = 1; };
+        }, 300);
+    }
+
+    setInterval(() => {
+        refreshCountdown -= 1;
+        if (refreshCountdown <= 0) {
+            refreshCountdown = 20;
+            refreshQR();
+        }
+        note.innerText = `⏳ Next refresh in ${refreshCountdown}s`;
+    }, 1000);
+</script>
