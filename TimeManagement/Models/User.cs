@@ -41,6 +41,8 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
+    public string? FaceImage { get; set; }
+
     public virtual ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();
 
     public virtual ICollection<Attendance> AttendanceApprovedByNavigations { get; set; } = new List<Attendance>();
