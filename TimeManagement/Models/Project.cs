@@ -41,6 +41,8 @@ public partial class Project
 
     public virtual User? Manager { get; set; }
 
+    public virtual ICollection<ProjectDocument> ProjectDocuments { get; set; } = new List<ProjectDocument>();
+
     public virtual ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();
 
     public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();

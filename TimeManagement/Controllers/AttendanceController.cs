@@ -13,15 +13,15 @@ namespace TimeManagement.Controllers
         private readonly MyDbContext _context;
         private static Dictionary<string, int> tokenStore = new(); // Token-to-UserId مؤقت
 
-        public AttendanceController(MyDbContext context)
-        {
-            _context = context;
-        }
+		public AttendanceController(MyDbContext context)
+		{
+			_context = context;
+		}
 
-        public IActionResult Attendance()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+		public IActionResult Attendance()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
             var today = DateOnly.FromDateTime(DateTime.Today);
             var records = _context.Attendances
@@ -29,67 +29,67 @@ namespace TimeManagement.Controllers
                 .OrderByDescending(a => a.Date)
                 .ToList();
 
-            var todayRecord = records.FirstOrDefault(a => a.Date == today);
+			var todayRecord = records.FirstOrDefault(a => a.Date == today);
 
-            var model = new AttendanceViewModel
-            {
-                Records = records,
-                TodayRecord = todayRecord,
-                CanCheckIn = todayRecord == null,
-                CanCheckOut = todayRecord != null && todayRecord.CheckIn.HasValue && !todayRecord.CheckOut.HasValue
-            };
+			var model = new AttendanceViewModel
+			{
+				Records = records,
+				TodayRecord = todayRecord,
+				CanCheckIn = todayRecord == null,
+				CanCheckOut = todayRecord != null && todayRecord.CheckIn.HasValue && !todayRecord.CheckOut.HasValue
+			};
 
-            return View(model);
-        }
+			return View(model);
+		}
 
-        [HttpPost]
-        public IActionResult CheckIn()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+		[HttpPost]
+		public IActionResult CheckIn()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            if (_context.Attendances.Any(a => a.UserId == userId && a.Date == today))
-                return RedirectToAction("Attendance");
+			var today = DateOnly.FromDateTime(DateTime.Today);
+			if (_context.Attendances.Any(a => a.UserId == userId && a.Date == today))
+				return RedirectToAction("Attendance");
 
-            _context.Attendances.Add(new Attendance
-            {
-                UserId = userId.Value,
-                Date = today,
-                CheckIn = DateTime.Now,
-                Status = "present",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            });
+			_context.Attendances.Add(new Attendance
+			{
+				UserId = userId.Value,
+				Date = today,
+				CheckIn = DateTime.Now,
+				Status = "present",
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now
+			});
 
-            _context.SaveChanges();
-            return RedirectToAction("Attendance");
-        }
+			_context.SaveChanges();
+			return RedirectToAction("Attendance");
+		}
 
-        [HttpPost]
-        public IActionResult CheckOut()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return RedirectToAction("Login", "Auth");
+		[HttpPost]
+		public IActionResult CheckOut()
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
+			var today = DateOnly.FromDateTime(DateTime.Today);
+			var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
-            if (record == null || record.CheckOut.HasValue)
-                return RedirectToAction("Attendance");
+			if (record == null || record.CheckOut.HasValue)
+				return RedirectToAction("Attendance");
 
-            record.CheckOut = DateTime.Now;
-            record.UpdatedAt = DateTime.Now;
+			record.CheckOut = DateTime.Now;
+			record.UpdatedAt = DateTime.Now;
 
-            if (record.CheckIn.HasValue)
-            {
-                var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
-                record.WorkHours = Math.Round((decimal)duration, 2);
-            }
+			if (record.CheckIn.HasValue)
+			{
+				var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
+				record.WorkHours = Math.Round((decimal)duration, 2);
+			}
 
-            _context.SaveChanges();
-            return RedirectToAction("Attendance");
-        }
+			_context.SaveChanges();
+			return RedirectToAction("Attendance");
+		}
 
         [HttpGet]
         public IActionResult Scan() => View();
@@ -110,10 +110,18 @@ namespace TimeManagement.Controllers
             var today = DateOnly.FromDateTime(DateTime.Today);
             var record = _context.Attendances.FirstOrDefault(a => a.UserId == userId && a.Date == today);
 
-            string message, status;
+			string message, status;
 
             if (record == null)
             {
+                // تخزين IP المستخدم
+                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+                if (user != null)
+                {
+                    user.Ipaddress = currentIp;
+                    user.UpdatedAt = DateTime.Now;
+                }
+
                 _context.Attendances.Add(new Attendance
                 {
                     UserId = userId,
@@ -124,32 +132,32 @@ namespace TimeManagement.Controllers
                     UpdatedAt = DateTime.Now
                 });
 
-                _context.SaveChanges();
-                message = "✅ Check-in successful!";
-                status = "success";
-            }
-            else if (record.CheckIn.HasValue && !record.CheckOut.HasValue)
-            {
-                record.CheckOut = DateTime.Now;
-                record.UpdatedAt = DateTime.Now;
+				_context.SaveChanges();
+				message = "✅ Check-in successful!";
+				status = "success";
+			}
+			else if (record.CheckIn.HasValue && !record.CheckOut.HasValue)
+			{
+				record.CheckOut = DateTime.Now;
+				record.UpdatedAt = DateTime.Now;
 
-                var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
-                record.WorkHours = Math.Round((decimal)duration, 2);
+				var duration = (record.CheckOut.Value - record.CheckIn.Value).TotalHours;
+				record.WorkHours = Math.Round((decimal)duration, 2);
 
-                _context.SaveChanges();
-                message = "✅ Check-out successful!";
-                status = "success";
-            }
-            else
-            {
-                message = "ℹ️ You have already completed attendance today.";
-                status = "info";
-            }
+				_context.SaveChanges();
+				message = "✅ Check-out successful!";
+				status = "success";
+			}
+			else
+			{
+				message = "ℹ️ You have already completed attendance today.";
+				status = "info";
+			}
 
-            ViewBag.Message = message;
-            ViewBag.Status = status;
-            return View("QRResult");
-        }
+			ViewBag.Message = message;
+			ViewBag.Status = status;
+			return View("QRResult");
+		}
 
         // ✅ Dynamic QR Generator (used in <img src> via JS)
         [HttpGet]
@@ -177,8 +185,8 @@ namespace TimeManagement.Controllers
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null) return RedirectToAction("Login", "Auth");
 
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            if (user == null) return NotFound();
+			var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+			if (user == null) return NotFound();
 
             var viewModel = new UserQrViewModel
             {
@@ -187,8 +195,8 @@ namespace TimeManagement.Controllers
                 QrBase64 = "" // سيتم تحميله عبر <img src="/Attendance/GetDynamicQr">
             };
 
-            return View(viewModel);
-        }
+			return View(viewModel);
+		}
 
         // ✅ إعادة التوجيه لو دخل شخص على رابط قديم
         public IActionResult QRCheckIn(int uid) => RedirectToAction("QRScanHandler");
