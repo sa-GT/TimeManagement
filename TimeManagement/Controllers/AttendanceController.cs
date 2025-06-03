@@ -118,7 +118,7 @@ namespace TimeManagement.Controllers
                 var user = _context.Users.FirstOrDefault(u => u.Id == userId);
                 if (user != null)
                 {
-                    user.Ipaddress = currentIp;
+                    //user.Ipaddress = currentIp;
                     user.UpdatedAt = DateTime.Now;
                 }
 

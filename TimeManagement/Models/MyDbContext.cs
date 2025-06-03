@@ -25,8 +25,6 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Project> Projects { get; set; }
 
-    public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
-
     public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
 
     public virtual DbSet<Task> Tasks { get; set; }
@@ -38,6 +36,8 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<TimeEntry> TimeEntries { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public DbSet<ProjectDocument> ProjectDocuments { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -280,21 +280,6 @@ public partial class MyDbContext : DbContext
             entity.HasOne(d => d.Manager).WithMany(p => p.Projects)
                 .HasForeignKey(d => d.ManagerId)
                 .HasConstraintName("FK__projects__manage__46E78A0C");
-        });
-
-        modelBuilder.Entity<ProjectDocument>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__ProjectD__3214EC0779CB9EF9");
-
-            entity.Property(e => e.FileName).HasMaxLength(255);
-            entity.Property(e => e.FilePath).HasMaxLength(500);
-            entity.Property(e => e.UploadedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-
-            entity.HasOne(d => d.Project).WithMany(p => p.ProjectDocuments)
-                .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__ProjectDo__Proje__4E53A1AA");
         });
 
         modelBuilder.Entity<ProjectMember>(entity =>
@@ -552,7 +537,6 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("last_name");
-            entity.Property(e => e.ManagerId).HasColumnName("manager_id");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -590,10 +574,6 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("username");
-
-            entity.HasOne(d => d.Manager).WithMany(p => p.InverseManager)
-                .HasForeignKey(d => d.ManagerId)
-                .HasConstraintName("FK_users_manager");
         });
 
         OnModelCreatingPartial(modelBuilder);
