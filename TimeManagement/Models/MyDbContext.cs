@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,8 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Project> Projects { get; set; }
 
+    public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
+
     public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
 
     public virtual DbSet<Task> Tasks { get; set; }
@@ -36,8 +39,6 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<TimeEntry> TimeEntries { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    public DbSet<ProjectDocument> ProjectDocuments { get; set; }
-
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -47,7 +48,7 @@ public partial class MyDbContext : DbContext
     {
         modelBuilder.Entity<ActivityLog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__activity__3213E83F31C71F1F");
+            entity.HasKey(e => e.Id).HasName("PK__activity__3213E83F08B7BF9D");
 
             entity.ToTable("activity_logs");
 
@@ -88,7 +89,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<Attendance>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__attendan__3213E83F5C657DB8");
+            entity.HasKey(e => e.Id).HasName("PK__attendan__3213E83FB6FB4277");
 
             entity.ToTable("attendance");
 
@@ -135,7 +136,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<LeaveRequest>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__leave_re__3213E83FF0768A95");
+            entity.HasKey(e => e.Id).HasName("PK__leave_re__3213E83F35F47E7D");
 
             entity.ToTable("leave_requests");
 
@@ -182,7 +183,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__notifica__3213E83F3C3A2A49");
+            entity.HasKey(e => e.Id).HasName("PK__notifica__3213E83F94E6AB30");
 
             entity.ToTable("notifications");
 
@@ -222,7 +223,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<Project>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__projects__3213E83F0A874EF7");
+            entity.HasKey(e => e.Id).HasName("PK__projects__3213E83F241D5ECF");
 
             entity.ToTable("projects");
 
@@ -282,9 +283,26 @@ public partial class MyDbContext : DbContext
                 .HasConstraintName("FK__projects__manage__46E78A0C");
         });
 
+        modelBuilder.Entity<ProjectDocument>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ProjectD__3214EC0717A4A448");
+
+            entity.ToTable("ProjectDocument");
+
+            entity.Property(e => e.FileName).HasMaxLength(255);
+            entity.Property(e => e.FilePath).HasMaxLength(500);
+            entity.Property(e => e.UploadedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Project).WithMany(p => p.ProjectDocuments)
+                .HasForeignKey(d => d.ProjectId)
+                .HasConstraintName("FK_ProjectDocument_Project");
+        });
+
         modelBuilder.Entity<ProjectMember>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__project___3213E83F9C80C80A");
+            entity.HasKey(e => e.Id).HasName("PK__project___3213E83FD86CCA8D");
 
             entity.ToTable("project_members");
 
@@ -322,7 +340,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<Task>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tasks__3213E83F726712CA");
+            entity.HasKey(e => e.Id).HasName("PK__tasks__3213E83F8B71DA84");
 
             entity.ToTable("tasks");
 
@@ -385,7 +403,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<TaskAttachment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__task_att__3213E83F7B54DA36");
+            entity.HasKey(e => e.Id).HasName("PK__task_att__3213E83F6A09FC88");
 
             entity.ToTable("task_attachments");
 
@@ -410,7 +428,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<TaskComment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__task_com__3213E83F1B6F9CD2");
+            entity.HasKey(e => e.Id).HasName("PK__task_com__3213E83FB682CEA3");
 
             entity.ToTable("task_comments");
 
@@ -436,7 +454,7 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<TimeEntry>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__time_ent__3213E83FC2E43533");
+            entity.HasKey(e => e.Id).HasName("PK__time_ent__3213E83F49AAE324");
 
             entity.ToTable("time_entries");
 
@@ -499,13 +517,13 @@ public partial class MyDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__users__3213E83FCAE6B734");
+            entity.HasKey(e => e.Id).HasName("PK__users__3213E83F3318A617");
 
             entity.ToTable("users");
 
-            entity.HasIndex(e => e.Email, "UQ__users__AB6E616479F05B4D").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__users__AB6E61640E1E762B").IsUnique();
 
-            entity.HasIndex(e => e.Username, "UQ__users__F3DBC5726DDF65B4").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__users__F3DBC57204E47C58").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
@@ -524,6 +542,9 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("first_name");
+            entity.Property(e => e.Ipaddress)
+                .HasMaxLength(50)
+                .HasColumnName("IPAddress");
             entity.Property(e => e.JoiningDate).HasColumnName("joining_date");
             entity.Property(e => e.LanguagePreference)
                 .HasMaxLength(10)
@@ -537,6 +558,7 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("last_name");
+            entity.Property(e => e.ManagerId).HasColumnName("manager_id");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .IsUnicode(false)
@@ -574,6 +596,10 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("username");
+
+            entity.HasOne(d => d.Manager).WithMany(p => p.InverseManager)
+                .HasForeignKey(d => d.ManagerId)
+                .HasConstraintName("FK_users_manager");
         });
 
         OnModelCreatingPartial(modelBuilder);
