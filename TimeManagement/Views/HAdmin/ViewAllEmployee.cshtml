@@ -1,4 +1,4 @@
-﻿@model IEnumerable<User>
+﻿@model Tuple<List<User>, List<ProjectMember>>
 @section Styles {
     <!-- plugin css file  -->
     <link rel="stylesheet" href="~/assets/plugin/datatables/responsive.dataTables.min.css">
@@ -217,36 +217,42 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach(var s in Model){
+                                        @foreach (var s in Model.Item1)
+                                        {
+                                            var userProjects = Model.Item2.Where(p => p.UserId == s.).ToList();
+
                                             <tr>
                                                 <td>
                                                     <img class="avatar rounded-circle" src="@s.ProfilePicture" alt="">
                                                     <span class="fw-bold ms-1">@s.FirstName</span>
                                                 </td>
                                                 <td>
-                                                    <a href="projects.html">Box of Crayons</a>
+                                                    @foreach (var proj in userProjects)
+                                                    {
+                                                        <div>@proj.Project.ProjectName</div>
+                                                    }
                                                 </td>
                                                 <td>
-                                                    <a href="task.html">5 Task</a>
+                                                    <a href="#">@userProjects.Sum(x => x.Project.Tasks?.Count ?? 0) Tasks</a>
                                                 </td>
                                                 <td>
-                                                    <a href="mailto:">JoanDyer@gmail.com</a>
+                                                    <a href="mailto:@s.Email">@s.Email</a>
                                                 </td>
                                                 <td>
-                                                    23/02/21
+                                                    @s.JoinDate?.ToString("dd/MM/yyyy")
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-success">Working</span>
                                                 </td>
                                                 <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                    <div class="btn-group" role="group">
                                                         <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
                                                         <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            }
-                                        </tbody>
+                                        }
+
                                     </table>
                                 </div>
                             </div>

@@ -114,8 +114,18 @@ namespace TimeManagement.Controllers.Habib
 		}
 		public IActionResult ViewAllEmployee()
 		{
-			var find_all_employee = myDbContext.Users.Where(m => m.ManagerId == 3);
-			return View(find_all_employee);
+			var userId = HttpContext.Session.GetInt32("UserId");
+
+			var employees = myDbContext.Users
+				.Where(u => u.ManagerId == userId)
+				.ToList();
+
+			var projectMembers = myDbContext.ProjectMembers
+				.Include(pm => pm.Project)
+				.ToList();
+
+			var tuple = new Tuple<List<User>, List<ProjectMember>>(employees, projectMembers);
+			return View(tuple);
 		}
 		[HttpPost]
 		public async Task<IActionResult> Edit_project(IFormFile ProjectDocument, Project project)
