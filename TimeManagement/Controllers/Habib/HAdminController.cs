@@ -27,8 +27,8 @@ namespace TimeManagement.Controllers.Habib
 		[HttpPost]
 		public async Task<IActionResult> AddProject(Project project, List<IFormFile> Documents)
 		{
-			project.ManagerId = 3;
-			project.Status = "active";
+            project.ManagerId = HttpContext.Session.GetInt32("UserId") ?? 0;
+            project.Status = "active";
 
 			myDbContext.Projects.Add(project);
 			await myDbContext.SaveChangesAsync();

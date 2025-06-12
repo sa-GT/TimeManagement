@@ -1,0 +1,44 @@
+How to connect the dataBase with your project (DB first): 
+
+
+1- In SQL-Server create a database and create some tables within it for example " user table "
+
+2- Go to visual studio and open Package Manager Console from : Tools -> NuGet Package Manager -> Package Manager Console.
+ - Then put this command one by one in the terminal : 
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+Install-Package Microsoft.EntityFrameworkCore.Design
+Install-Package Microsoft.EntityFrameworkCore.Tools
+
+
+3- After that inside the same terminal run this command to link between the database that you already have been created and your project
+ - Don't forget to edit the server name and database name
+
+Scaffold-DbContext "Server=ااسم السيرفر;Database=اسم الداتابيز;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context MyDbContext
+
+
+4- Put this code inside program.cs
+
+builder.Services.AddDbContext<MyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
+
+
+5- Put this code inside appsetting.json
+
+"ConnectionStrings": {
+  "MyConnectionString": "Server=اسم السيرفر;Database=اسم الداتابيز;Trusted_Connection=True;TrustServerCertificate=True;"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
