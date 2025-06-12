@@ -232,7 +232,7 @@
                                     <div class="col-sm-12">
                                         <label for="formFileMultipleone" class="form-label">Task Assign Person</label>
                                         <select class="form-select" name="SelectedUserIds" multiple aria-label="Select Members">
-                                            @foreach (var users in Model.Item3.Where(s => s.ManagerId == 3))
+                                            @foreach (var users in Model.Item3.Where(s => s.ManagerId == Context.Session.GetInt32("UserId")))
                                             {
                                                 <option value="@users.Id">@users.FirstName</option>
                                             }
