@@ -1,0 +1,444 @@
+﻿@model TimeManagement.Models.Task
+
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/plugin/nestable/jquery-nestable.css" />
+
+    <style>
+        .dd-empty{
+            background-color:aliceblue;
+        }
+
+    </style>
+}
+
+<div id="timetracker-layout" class="theme-indigo">
+    <!-- main body area -->
+    <div class="main px-lg-4 px-md-4">
+        <!-- Body: Body -->
+        <div class="body d-flex py-lg-3 py-md-2">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                            <h3 class="h4 mb-0">Task Management</h3>
+                            @* <div class="col-auto d-flex w-sm-100 mt-2 mt-sm-0"> *@
+                            @*     <button type="button" class="btn btn-dark btn-set-task w-sm-100" data-bs-toggle="modal" data-bs-target="#createtask"> *@
+                            @*         <i class="icofont-plus-circle me-2 fs-6"></i>Create Task *@
+                            @*     </button> *@
+                            @* </div> *@
+                        </div>
+                    </div>
+
+                    <form method="get" asp-action="Board" class="mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <label for="projectId" class="form-label fw-bold">Select Project:</label>
+                                @Html.DropDownList("projectId", (SelectList)ViewBag.Projects, "Select Project", new { @class = "form-select", onchange = "this.form.submit()" })
+                            </div>
+                        </div>
+                    </form>
+
+                </div> <!-- Row end  -->
+                <div class="row clearfix g-3">
+                    <div class="col-lg-12 col-md-12 flex-column">
+                        <div class="row taskboard g-3 pb-xxl-4">
+                            <!-- To Do -->
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 mt-xxl-4 mt-xl-4 mt-lg-4 mt-md-4 mt-sm-4 mt-4">
+                                <h6 class="fw-bold py-3 mb-0">To Do</h6>
+                                <div class="todo_task">
+                                    <div class="dd" data-plugin="nestable">
+                                        <ol class="dd-list">
+                                            @if (ViewBag.Todo == null || ViewBag.Todo.Count == 0)
+                                            {
+                                                <li class="dd-item dd-empty" data-id="-1" style="min-height: 60px;">
+                                                    <div class="text-center text-muted" style="padding: 15px;">No tasks in this section</div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                foreach (var task in ViewBag.Todo)
+                                                {
+                                                    <li class="dd-item" data-id="@task.Id">
+                                                        <div class="dd-handle">
+                                                            <div class="task-info d-flex align-items-center justify-content-between">
+                                                                <h6 class="light-info-bg py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">@(task.TaskName ?? "No Title")</h6>
+                                                                <div class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                                    <div class="avatar-list avatar-list-stacked m-0">
+                                                                        <img class="avatar rounded-circle small-avt" src="assets/images/xs/avatar1.svg" alt="">
+                                                                    </div>
+                                                                    <span class="badge bg-warning text-end mt-2">@task.Priority?.ToUpper()</span>
+                                                                </div>
+
+                                                            </div>
+                                                            @if (task.TaskAttachments != null && task.TaskAttachments.Count > 0)
+                                                            {
+                                                                <div class="mt-2">
+                                                                    <strong>Attachments:</strong>
+                                                                    <ul class="list-unstyled">
+                                                                        @foreach (var file in task.TaskAttachments)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="@Url.Content("~/uploads/" + file.FilePath)" target="_blank">
+                                                                                    📎 @file.FileName
+                                                                                </a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            }
+
+                                                            <p class="py-2 mb-0">@(task.Description ?? "No description provided")</p>
+                                                            <div class="tikit-info row g-3 align-items-center">
+                                                                <div class="col-sm">
+                                                                    <ul class="d-flex list-unstyled align-items-center flex-wrap">
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-flag"></i>
+                                                                                <span class="ms-1">@(task.DueDate?.ToString("dd MMM") ?? "No date")</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-ui-text-chat"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-paper-clip"></i>
+                                                                                <span class="ms-1">@task.TaskAttachments?.Count</span>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="col-sm text-end">
+                                                                    <div class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                                        @(task.Project?.Name ?? "No Project")
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- In Progress -->
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 mt-xxl-4 mt-xl-4 mt-lg-4 mt-md-0 mt-sm-0 mt-0">
+                                <h6 class="fw-bold py-3 mb-0">In Progress</h6>
+                                <div class="progress_task">
+                                    <div class="dd" data-plugin="nestable">
+                                        <ol class="dd-list">
+                                            @if (ViewBag.InProgress == null || ViewBag.InProgress.Count == 0)
+                                            {
+                                                <li class="dd-item dd-empty" data-id="-1" style="min-height: 60px;">
+                                                    <div class="text-center text-muted" style="padding: 15px;">No tasks in this section</div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                foreach (var task in ViewBag.InProgress)
+                                                {
+                                                    <li class="dd-item" data-id="@task.Id">
+                                                        <div class="dd-handle">
+                                                            <div class="task-info d-flex align-items-center justify-content-between">
+                                                                <h6 class="light-info-bg py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">@(task.TaskName ?? "No Title")</h6>
+                                                                <div class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                                    <div class="avatar-list avatar-list-stacked m-0">
+                                                                        <img class="avatar rounded-circle small-avt" src="assets/images/xs/avatar1.svg" alt="">
+                                                                    </div>
+                                                                    <span class="badge bg-warning text-end mt-2">@task.Priority?.ToUpper()</span>
+                                                                </div>
+                                                            </div>
+                                                            @if (task.TaskAttachments != null && task.TaskAttachments.Count > 0)
+                                                            {
+                                                                <div class="mt-2">
+                                                                    <strong>Attachments:</strong>
+                                                                    <ul class="list-unstyled">
+                                                                        @foreach (var file in task.TaskAttachments)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="@Url.Content("~/uploads/" + file.FilePath)" target="_blank">
+                                                                                    📎 @file.FileName
+                                                                                </a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            }
+
+                                                            <p class="py-2 mb-0">@(task.Description ?? "No description provided")</p>
+                                                            <div class="tikit-info row g-3 align-items-center">
+                                                                <div class="col-sm">
+                                                                    <ul class="d-flex list-unstyled align-items-center flex-wrap">
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-flag"></i>
+                                                                                <span class="ms-1">@(task.DueDate?.ToString("dd MMM") ?? "No date")</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-ui-text-chat"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-paper-clip"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="col-sm text-end">
+                                                                    <div class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                                        @(task.Project?.Name ?? "No Project")
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Needs Review -->
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 mt-xxl-4 mt-xl-4 mt-lg-4 mt-md-0 mt-sm-0 mt-0">
+                                <h6 class="fw-bold py-3 mb-0">Needs Review</h6>
+                                <div class="review_task">
+                                    <div class="dd" data-plugin="nestable">
+                                        <ol class="dd-list">
+                                            @if (ViewBag.NeedsReview == null || ViewBag.NeedsReview.Count == 0)
+                                            {
+                                                <li class="dd-item dd-empty" data-id="-1" style="min-height: 60px;">
+                                                    <div class="text-center text-muted" style="padding: 15px;">No tasks in this section</div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                foreach (var task in ViewBag.NeedsReview)
+                                                {
+                                                    <li class="dd-item" data-id="@task.Id">
+                                                        <div class="dd-handle">
+                                                            <div class="task-info d-flex align-items-center justify-content-between">
+                                                                <h6 class="light-info-bg py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">@(task.TaskName ?? "No Title")</h6>
+                                                                <div class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                                    <div class="avatar-list avatar-list-stacked m-0">
+                                                                        <img class="avatar rounded-circle small-avt" src="assets/images/xs/avatar1.svg" alt="">
+                                                                    </div>
+                                                                    <span class="badge bg-warning text-end mt-2">@task.Priority?.ToUpper()</span>
+                                                                </div>
+                                                            </div>
+                                                            @if (task.TaskAttachments != null && task.TaskAttachments.Count > 0)
+                                                            {
+                                                                <div class="mt-2">
+                                                                    <strong>Attachments:</strong>
+                                                                    <ul class="list-unstyled">
+                                                                        @foreach (var file in task.TaskAttachments)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="@Url.Content("~/uploads/" + file.FilePath)" target="_blank">
+                                                                                    📎 @file.FileName
+                                                                                </a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            }
+
+                                                            <p class="py-2 mb-0">@(task.Description ?? "No description provided")</p>
+                                                            <div class="tikit-info row g-3 align-items-center">
+                                                                <div class="col-sm">
+                                                                    <ul class="d-flex list-unstyled align-items-center flex-wrap">
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-flag"></i>
+                                                                                <span class="ms-1">@(task.DueDate?.ToString("dd MMM") ?? "No date")</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-ui-text-chat"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-paper-clip"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="col-sm text-end">
+                                                                    <div class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                                        @(task.Project?.Name ?? "No Project")
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Completed -->
+                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 mt-xxl-4 mt-xl-4 mt-lg-4 mt-md-0 mt-sm-0 mt-0">
+                                <h6 class="fw-bold py-3 mb-0">Completed</h6>
+                                <div class="completed_task">
+                                    <div class="dd" data-plugin="nestable">
+                                        <ol class="dd-list">
+                                            @if (ViewBag.Completed == null || ViewBag.Completed.Count == 0)
+                                            {
+                                                <li class="dd-item dd-empty" data-id="-1" style="min-height: 60px;">
+                                                    <div class="text-center text-muted" style="padding: 15px;">No tasks in this section</div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                foreach (var task in ViewBag.Completed)
+                                                {
+                                                    <li class="dd-item" data-id="@task.Id">
+                                                        <div class="dd-handle">
+                                                            <div class="task-info d-flex align-items-center justify-content-between">
+                                                                <h6 class="light-info-bg py-1 px-2 rounded-1 d-inline-block fw-bold small-14 mb-0">@(task.TaskName ?? "No Title")</h6>
+                                                                <div class="task-priority d-flex flex-column align-items-center justify-content-center">
+                                                                    <div class="avatar-list avatar-list-stacked m-0">
+                                                                        <img class="avatar rounded-circle small-avt" src="assets/images/xs/avatar1.svg" alt="">
+                                                                    </div>
+<span class="badge bg-warning text-end mt-2">@task.Priority?.ToUpper()</span>
+                                                                </div>
+                                                                @if (task.TaskAttachments != null && task.TaskAttachments.Count > 0)
+                                                                {
+                                                                    <div class="mt-2">
+                                                                        <strong>Attachments:</strong>
+                                                                        <ul class="list-unstyled">
+                                                                            @foreach (var file in task.TaskAttachments)
+                                                                            {
+                                                                                <li>
+                                                                                    <a href="@Url.Content("~/uploads/" + file.FilePath)" target="_blank">
+                                                                                        📎 @file.FileName
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                            <p class="py-2 mb-0">@(task.Description ?? "No description provided")</p>
+                                                            <div class="tikit-info row g-3 align-items-center">
+                                                                <div class="col-sm">
+                                                                    <ul class="d-flex list-unstyled align-items-center flex-wrap">
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-flag"></i>
+                                                                                <span class="ms-1">@(task.DueDate?.ToString("dd MMM") ?? "No date")</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li class="me-2">
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-ui-text-chat"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="icofont-paper-clip"></i>
+                                                                                <span class="ms-1">0</span>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="col-sm text-end">
+                                                                    <div class="small text-truncate light-danger-bg py-1 px-2 rounded-1 d-inline-block fw-bold small">
+                                                                        @(task.Project?.Name ?? "No Project")
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- Row end  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/assets/plugin/nestable/jquery.nestable.js"></script>
+    <script src="~/js/page/task.js"></script>
+    <script>
+        // Basic form validation for Bootstrap
+             $(document).ready(function () {
+            // دالة لتحديث حالة المهمة عبر AJAX
+            function updateTaskStatus(taskId, newStatus) {
+                if (taskId && taskId !== -1) { // التأكد من أن taskId صالح
+                    $.ajax({
+                        url: '/Tasks/UpdateStatus',
+                        type: 'POST',
+                        data: { id: taskId, status: newStatus },
+                        success: function (response) {
+                            console.log(`✅ Task ${taskId} moved to ${newStatus}`);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(`❌ Failed to update task ${taskId} to ${newStatus}: ${error}`);
+                            alert('فشل في تحديث حالة المهمة. يرجى المحاولة مرة أخرى.');
+                        }
+                    });
+                }
+            }
+
+            // تعريف الأقسام وحالتهم
+            const sections = {
+                '.todo_task': 'todo',
+                '.progress_task': 'in-progress',
+                '.review_task': 'review',
+                '.completed_task': 'completed'
+            };
+
+            // تطبيق Nestable على كل قسم
+            $.each(sections, function (selector, status) {
+                $(selector + ' .dd').nestable({
+                    maxDepth: 1 // منع التداخل العميق للمهام
+                }).on('change', function () {
+                    // عند حدوث تغيير، التحقق من جميع العناصر في كل القوائم
+                    $.each(sections, function (sectionSelector, sectionStatus) {
+                        $(sectionSelector + ' .dd-item').each(function () {
+                            const taskId = $(this).data('id');
+                            // التأكد من أن taskId صالح وأن العنصر موجود في هذا القسم
+                            if (taskId && taskId !== -1 && $(this).closest(sectionSelector).length) {
+                                updateTaskStatus(taskId, sectionStatus);
+                            }
+                        });
+                    });
+                });
+            });
+
+            // إضافة معالجة إضافية للتأكد من اكتشاف التغييرات
+            $('.dd').on('change', function () {
+                console.log('تم اكتشاف تغيير في السحب والإفلات');
+            });
+        });
+    </script>
+}
+
+}

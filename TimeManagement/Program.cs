@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TimeManagement.Models;
+using TimeManagement.Services;
 
 namespace TimeManagement
 {
@@ -11,6 +12,7 @@ namespace TimeManagement
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddTransient<EmailService>();
 
 			builder.Services.AddDbContext<MyDbContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));

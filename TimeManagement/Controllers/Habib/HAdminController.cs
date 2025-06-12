@@ -79,9 +79,9 @@ namespace TimeManagement.Controllers.Habib
 						FilePath = "/uploads/project_docs/" + uniqueFileName
 					};
 
-					myDbContext.ProjectDocuments.Add(doc);
-				}
-			}
+                    myDbContext.ProjectDocuments.Add(doc);
+                }
+            }
 
 			await myDbContext.SaveChangesAsync();
 
