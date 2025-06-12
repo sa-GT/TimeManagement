@@ -114,7 +114,62 @@ namespace TimeManagement.Controllers.Habib
 		}
 		public IActionResult ViewAllEmployee()
 		{
-			return View();
+			var find_all_employee = myDbContext.Users.Where(m => m.ManagerId == 3);
+			return View(find_all_employee);
 		}
+		[HttpPost]
+		public async Task<IActionResult> Edit_project(IFormFile ProjectDocument, Project project)
+		{
+			var oldProject = await myDbContext.Projects.FindAsync(project.Id);
+			if (oldProject == null) return NotFound();
+
+			// تحديث الحقول الأساسية
+			oldProject.Name = project.Name;
+			oldProject.Description = project.Description;
+			oldProject.StartDate = project.StartDate;
+			oldProject.EndDate = project.EndDate;
+			oldProject.Category = project.Category;
+			oldProject.UpdatedAt = DateTime.Now;
+
+			// إذا المستخدم رفع ملف جديد
+			if (ProjectDocument != null && ProjectDocument.Length > 0)
+			{
+				// حذف المستندات القديمة من قاعدة البيانات (اختياري: واحذف من السيرفر أيضاً)
+				var oldDocs = myDbContext.ProjectDocuments.Where(d => d.ProjectId == oldProject.Id).ToList();
+				foreach (var doc in oldDocs)
+				{
+					var fullPath = Path.Combine(_env.WebRootPath, doc.FilePath.TrimStart('/'));
+					if (System.IO.File.Exists(fullPath))
+						System.IO.File.Delete(fullPath);
+
+					myDbContext.ProjectDocuments.Remove(doc);
+				}
+
+				// إضافة المستند الجديد
+				var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "project_docs");
+				Directory.CreateDirectory(uploadsFolder);
+
+				var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ProjectDocument.FileName);
+				var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+				using (var stream = new FileStream(filePath, FileMode.Create))
+				{
+					await ProjectDocument.CopyToAsync(stream);
+				}
+
+				var newDoc = new ProjectDocument
+				{
+					ProjectId = oldProject.Id,
+					FileName = ProjectDocument.FileName,
+					FilePath = "/uploads/project_docs/" + uniqueFileName
+				};
+
+				myDbContext.ProjectDocuments.Add(newDoc);
+			}
+
+			await myDbContext.SaveChangesAsync();
+			return RedirectToAction("Projectlist");
+		}
+
 	}
 }

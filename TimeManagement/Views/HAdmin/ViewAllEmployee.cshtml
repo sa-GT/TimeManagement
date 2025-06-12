@@ -1,4 +1,5 @@
-﻿@section Styles {
+﻿@model IEnumerable<User>
+@section Styles {
     <!-- plugin css file  -->
     <link rel="stylesheet" href="~/assets/plugin/datatables/responsive.dataTables.min.css">
     <link rel="stylesheet" href="~/assets/plugin/datatables/dataTables.bootstrap5.min.css">
@@ -216,10 +217,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach(var s in Model){
                                             <tr>
                                                 <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar1.svg" alt="">
-                                                    <span class="fw-bold ms-1">Joan Dyer</span>
+                                                    <img class="avatar rounded-circle" src="@s.ProfilePicture" alt="">
+                                                    <span class="fw-bold ms-1">@s.FirstName</span>
                                                 </td>
                                                 <td>
                                                     <a href="projects.html">Box of Crayons</a>
@@ -243,168 +245,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar2.svg" alt="">
-                                                    <span class="fw-bold ms-1">Ryan	Randall</span>
-                                                </td>
-                                                <td>
-                                                    <a href="projects.html">Fast Cad</a>
-                                                </td>
-                                                <td>
-                                                    <a href="task.html">8 Task</a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:">RyanRandall@gmail.com</a>
-                                                </td>
-                                                <td>
-                                                    14/04/21
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Working</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
-                                                        <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar3.svg" alt="">
-                                                    <span class="fw-bold ms-1">Phil	Glover</span>
-                                                </td>
-                                                <td>
-                                                    <a href="projects.html">Gob Geeklords</a>
-                                                </td>
-                                                <td>
-                                                    <a href="task.html">2 Task</a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:">PhilGlover@gmail.com</a>
-                                                </td>
-                                                <td>
-                                                    18/03/21
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Working</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
-                                                        <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar4.svg" alt="">
-                                                    <span class="fw-bold ms-1">Victor Rampling</span>
-                                                </td>
-                                                <td>
-                                                    <a href="projects.html">Java Dalia</a>
-                                                </td>
-                                                <td>
-                                                    <a href="task.html">7 Task</a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:">VictorRampling@gmail.com</a>
-                                                </td>
-                                                <td>
-                                                    18/06/21
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Working</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
-                                                        <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar5.svg" alt="">
-                                                    <span class="fw-bold ms-1">Sally Graham</span>
-                                                </td>
-                                                <td>
-                                                    <a href="projects.html">Practice to Perfect</a>
-                                                </td>
-                                                <td>
-                                                    <a href="task.html">9 Task</a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:">SallyGraham@gmail.com</a>
-                                                </td>
-                                                <td>
-                                                    13/01/21
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Working</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
-                                                        <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar6.svg" alt="">
-                                                    <span class="fw-bold ms-1">Robert Anderson</span>
-                                                </td>
-                                                <td>
-                                                    <a href="projects.html">Rhinestone</a>
-                                                </td>
-                                                <td>
-                                                    <a href="task.html">5 Task</a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:">RobertAnderson@gmail.com</a>
-                                                </td>
-                                                <td>
-                                                    14/01/21
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Working</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
-                                                        <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img class="avatar rounded-circle" src="assets/images/xs/avatar7.svg" alt="">
-                                                    <span class="fw-bold ms-1">Ryan	Stewart</span>
-                                                </td>
-                                                <td>
-                                                    <a href="projects.html">Social Geek Made</a>
-                                                </td>
-                                                <td>
-                                                    <a href="task.html">15 Task</a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:">RyanStewart@gmail.com</a>
-                                                </td>
-                                                <td>
-                                                    13/01/21
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success">Working</span>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
-                                                        <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>

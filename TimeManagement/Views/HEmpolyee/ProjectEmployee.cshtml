@@ -1,0 +1,210 @@
+﻿@model Tuple<List<Project>, List<ProjectMember>, List<User>, List<ProjectDocument>>
+@{
+    Layout = "~/views/shared/_dashboard.cshtml";
+    // var userId = Context.Session.GetInt32("userId"); // بدل userid الي تحت بي session
+    var userId = 4;
+    var role = Context.Session.GetString("role");
+    var userProjects = Model.Item2.Where(m => m.UserId == userId).Select(m => m.ProjectId).ToList();
+}
+<div id="timetracker-layout" class="theme-indigo">
+    <div class="main px-lg-4 px-md-4">
+        <div class="body d-flex py-lg-3 py-md-2">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header p-0 no-bg bg-transparent align-items-center px-0 d-flex border-bottom flex-wrap">
+                            <h3 class="h4 py-3 mb-0">Projects</h3>
+                            <div class="d-flex py-2 project-tab flex-wrap w-sm-100 ms-auto">
+                                @if (role == "Admin" || role == "Manager")
+                                {
+                                    <button type="button" class="btn btn-dark w-sm-100 mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#createproject">
+                                        <i class="icofont-plus-circle me-2 fs-6"></i>Create Project
+                                    </button>
+                                }
+                                <ul class="nav nav-tabs tab-body-header rounded ms-0 ms-md-3 prtab-set w-sm-100" role="tablist">
+                                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#All-list" role="tab">All</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Started-list" role="tab">Started</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Approval-list" role="tab">Approval</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Completed-list" role="tab">Completed</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-lg-12 col-md-12 flex-column">
+                        <div class="tab-content mt-4 project-board">
+                            <div class="tab-pane fade show active" id="All-list">
+                                <div class="row g-3 gy-5 py-3 row-deck">
+                                    @foreach (var s in Model.Item1.Where(p => role == "Admin" || role == "Manager" || userProjects.Contains(p.Id)))
+                                    {
+                                        int? durationDays = null;
+                                        if (s.StartDate.HasValue && s.EndDate.HasValue)
+                                        {
+                                            durationDays = (s.EndDate.Value.ToDateTime(TimeOnly.MinValue) - s.StartDate.Value.ToDateTime(TimeOnly.MinValue)).Days;
+                                        }
+                                        <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-center justify-content-between mt-5">
+                                                        <div class="lesson_name">
+                                                            <div class="project-block light-info-bg">
+                                                                @{
+                                                                    string iconClass = s.Category switch
+                                                                    {
+                                                                        "UI/UX Design" => "icofont-paint",
+                                                                        "Website Design" => "icofont-web",
+                                                                        "App Development" => "icofont-smart-phone",
+                                                                        "Quality Assurance" => "icofont-check-circled",
+                                                                        "Development" => "icofont-code-alt",
+                                                                        "Backend Development" => "icofont-database",
+                                                                        "Software Testing" => "icofont-bug",
+                                                                        "Marketing" => "icofont-bullhorn",
+                                                                        "SEO" => "icofont-chart-growth",
+                                                                        "Other" => "icofont-archive",
+                                                                        _ => "icofont-folder"
+                                                                    };
+                                                                }
+                                                                <i class="@iconClass"></i>
+                                                            </div>
+
+                                                            <span class="small text-muted project_name fw-bold">@s.Name</span>
+                                                            <h6 class="mb-0 fw-bold fs-6 mb-2">@s.Description</h6>
+
+                                                            @if (Model.Item4 != null)
+                                                            {
+                                                                var projectDocs = Model.Item4.Where(d => d.ProjectId == s.Id).ToList();
+                                                                if (projectDocs.Any())
+                                                                {
+                                                                    <div class="mt-2">
+                                                                        <h6 class="fw-bold small text-muted">Documents:</h6>
+                                                                        @foreach (var doc in projectDocs)
+                                                                        {
+                                                                            <div>
+                                                                                <a href="@doc.FilePath" target="_blank">@doc.FileName</a>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+
+                                                        @if (role == "Admin" || role == "Manager")
+                                                        {
+                                                            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                        data-bs-toggle="modal" data-bs-target="#editproject"
+                                                                        data-id="@s.Id"
+                                                                        data-name="@s.Name"
+                                                                        data-category="@s.Category"
+                                                                        data-start="@s.StartDate?.ToString("yyyy-MM-dd")"
+                                                                        data-end="@s.EndDate?.ToString("yyyy-MM-dd")"
+                                                                        data-priority="@s.Priority"
+                                                                        data-desc="@s.Description">
+                                                                    <i class="icofont-edit text-success"></i>
+                                                                </button>
+
+                                                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteprojectModal_@s.Id">
+                                                                    <i class="icofont-ui-delete text-danger"></i>
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                    </div>
+
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar-list avatar-list-stacked pt-2">
+                                                            @foreach (var member in Model.Item2.Where(m => m.ProjectId == s.Id))
+                                                            {
+                                                                @foreach (var user in Model.Item3.Where(H => H.Id == member.UserId))
+                                                                {
+                                                                    <img class="avatar rounded-circle sm" src="@user.ProfilePicture" alt="">
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row g-2 pt-4">
+                                                        <div class="col-6">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="icofont-sand-clock"></i>
+                                                                <span class="ms-2">
+                                                                    @if (s.StartDate.HasValue && s.EndDate.HasValue)
+                                                                    {
+                                                                        var duration = (s.EndDate.Value.ToDateTime(TimeOnly.MinValue) - s.StartDate.Value.ToDateTime(TimeOnly.MinValue)).Days;
+                                                                        @($"{duration} Days")
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="icofont-group-students "></i>
+                                                                <span class="ms-2">@Model.Item2.Count(m => m.ProjectId == s.Id) Members</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="dividers-block"></div>
+                                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                                        <h4 class="small fw-bold mb-0">Progress</h4>
+                                                        <span class="small light-danger-bg p-1 rounded">
+                                                            <i class="icofont-ui-clock"></i>
+                                                            @if (s.StartDate.HasValue && s.EndDate.HasValue)
+                                                            {
+                                                                var duration = (s.EndDate.Value.ToDateTime(TimeOnly.MinValue) - s.StartDate.Value.ToDateTime(TimeOnly.MinValue)).Days;
+                                                                @($"{duration} Days")
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-secondary" style="width: 25%"></div>
+                                                        <div class="progress-bar bg-secondary ms-1" style="width: 25%"></div>
+                                                        <div class="progress-bar bg-secondary ms-1" style="width: 10%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- فقط يظهر لو كان Admin أو Manager -->
+        @if (role == "Admin" || role == "Manager")
+        {
+            @await Html.PartialAsync("_CreateProjectModal")
+            @await Html.PartialAsync("_EditProjectModal")
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const editModal = document.getElementById('editproject');
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const id = document.getElementById('editProjectId');
+            const name = document.getElementById('editProjectName');
+            const category = document.getElementById('editCategory');
+            const start = document.getElementById('editStartDate');
+            const end = document.getElementById('editEndDate');
+            const priority = document.getElementById('editPriority');
+            const desc = document.getElementById('editDescription');
+
+            if (id) id.value = button.getAttribute('data-id') || '';
+            if (name) name.value = button.getAttribute('data-name') || '';
+            if (category) category.value = button.getAttribute('data-category') || '';
+            if (start) start.value = button.getAttribute('data-start') || '';
+            if (end) end.value = button.getAttribute('data-end') || '';
+            if (priority) priority.value = button.getAttribute('data-priority') || '';
+            if (desc) desc.value = button.getAttribute('data-desc') || '';
+        });
+    </script>
+}

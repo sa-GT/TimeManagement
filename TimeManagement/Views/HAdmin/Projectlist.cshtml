@@ -82,7 +82,18 @@
                                                             }
                                                         </div>
                                                         <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editproject"><i class="icofont-edit text-success"></i></button>
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                    data-bs-toggle="modal" data-bs-target="#editproject"
+                                                                    data-id="@s.Id"
+                                                                    data-name="@s.Name"
+                                                                    data-category="@s.Category"
+                                                                    data-start="@s.StartDate?.ToString("yyyy-MM-dd")"
+                                                                    data-end="@s.EndDate?.ToString("yyyy-MM-dd")"
+                                                                    data-priority="@s.Priority"
+                                                                    data-desc="@s.Description">
+                                                                <i class="icofont-edit text-success"></i>
+                                                            </button>
+
                                                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteprojectModal_@s.Id">
                                                                 <i class="icofont-ui-delete text-danger"></i>
                                                             </button>
@@ -268,101 +279,83 @@
             </form>
         </div>
 
-        <!-- Edit Project-->
+        <!-- Edit Project Modal -->
         <div class="modal fade" id="editproject" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title  fw-bold" id="editprojectLabel"> Edit Project</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput78" class="form-label">Project Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput78" value="Social Geek Made">
+                    <form method="post" asp-action="Edit_project" asp-controller="HAdmin" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold">Edit Project</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Project Category</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>UI/UX Design</option>
-                                <option value="1">Website Design</option>
-                                <option value="2">App Development</option>
-                                <option value="3">Quality Assurance</option>
-                                <option value="4">Development</option>
-                                <option value="5">Backend Development</option>
-                                <option value="6">Software Testing</option>
-                                <option value="7">Website Design</option>
-                                <option value="8">Marketing</option>
-                                <option value="9">SEO</option>
-                                <option value="10">Other</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="formFileMultiple456" class="form-label">Project Images & Document</label>
-                            <input class="form-control" type="file" id="formFileMultiple456">
-                        </div>
-                        <div class="deadline-form">
-                            <form>
-                                <div class="row g-3 mb-3">
-                                    <div class="col">
-                                        <label for="datepickerded123" class="form-label">Project Start Date</label>
-                                        <input type="date" class="form-control" id="datepickerded123" value="2021-01-10">
-                                    </div>
-                                    <div class="col">
-                                        <label for="datepickerded456" class="form-label">Project End Date</label>
-                                        <input type="date" class="form-control" id="datepickerded456" value="2021-04-10">
-                                    </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="editProjectId" name="Id" />
+
+                            <div class="mb-3">
+                                <label class="form-label">Project Name</label>
+                                <input type="text" class="form-control" id="editProjectName" name="Name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Project Document</label>
+                                <input type="file" class="form-control" name="ProjectDocument">
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="editStartDate" name="StartDate">
                                 </div>
-                                <div class="row g-3 mb-3">
-                                    <div class="col-sm-12">
-                                        <label class="form-label">Notifation Sent</label>
-                                        <select class="form-select" aria-label="Default select example">
-                                            <option selected>All</option>
-                                            <option value="1">Team Leader Only</option>
-                                            <option value="2">Team Member Only</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <label for="formFileMultipleone" class="form-label">Task Assign Person</label>
-                                        <select class="form-select" multiple aria-label="Default select Priority">
-                                            <option selected>Lucinda Massey</option>
-                                            <option selected value="1">Ryan Nolan</option>
-                                            <option selected value="2">Oliver Black</option>
-                                            <option selected value="3">Adam Walker</option>
-                                            <option selected value="4">Brian Skinner</option>
-                                            <option value="5">Dan Short</option>
-                                            <option value="5">Jack Glover</option>
-                                        </select>
-                                    </div>
+                                <div class="col">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="editEndDate" name="EndDate">
                                 </div>
-                            </form>
-                        </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-sm">
-                                <label for="formFileMultipleone" class="form-label">Priority</label>
-                                <select class="form-select" aria-label="Default select Priority">
-                                    <option selected>Medium</option>
-                                    <option value="1">Highest</option>
-                                    <option value="2">Low</option>
-                                    <option value="3">Lowest</option>
-                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="editDescription" name="Description" rows="3"></textarea>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="exampleFormControlTextarea786" class="form-label">Description (optional)</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea786" rows="3">Social Geek Made,lorem urna commodo sem. Pellentesque venenatis leo quam, sed mattis sapien lobortis ut. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                            </textarea>
+
+                        <div class="modal-footer" style="background-color: #f8f9fa;">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
-                        <button type="button" class="btn btn-primary">Create</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        const editModal = document.getElementById('editproject');
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            const id = document.getElementById('editProjectId');
+            const name = document.getElementById('editProjectName');
+            const category = document.getElementById('editCategory');
+            const start = document.getElementById('editStartDate');
+            const end = document.getElementById('editEndDate');
+            const priority = document.getElementById('editPriority');
+            const desc = document.getElementById('editDescription');
+
+            if (id) id.value = button.getAttribute('data-id') || '';
+            if (name) name.value = button.getAttribute('data-name') || '';
+            if (category) category.value = button.getAttribute('data-category') || '';
+            if (start) start.value = button.getAttribute('data-start') || '';
+            if (end) end.value = button.getAttribute('data-end') || '';
+            if (priority) priority.value = button.getAttribute('data-priority') || '';
+            if (desc) desc.value = button.getAttribute('data-desc') || '';
+        });
+    </script>
+}
 
 
                         
