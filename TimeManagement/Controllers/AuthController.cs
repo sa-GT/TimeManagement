@@ -4,6 +4,7 @@ using System.Linq;
 using TimeManagement.Models;
 using TimeManagement.ViewModels;
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace TimeManagement.Controllers
 {
@@ -67,7 +68,7 @@ namespace TimeManagement.Controllers
             HttpContext.Session.SetString("Role", user.Role);
 
             return user.Role == "admin"
-                ? RedirectToAction("EmployeeAttendanceList", "AdminAttendance")
+                ? RedirectToAction("ViewAllEmployee", "HAdmin")
                 : RedirectToAction("Profile", "Profile");
         }
 
@@ -78,3 +79,5 @@ namespace TimeManagement.Controllers
         }
     }
 }
+
+

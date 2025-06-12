@@ -14,10 +14,10 @@ namespace TimeManagement
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<EmailService>();
 
-            builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+			builder.Services.AddDbContext<MyDbContext>(options =>
+				options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 
-            builder.Services.AddSession(options =>
+			builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromHours(1);
                 options.Cookie.HttpOnly = true;
