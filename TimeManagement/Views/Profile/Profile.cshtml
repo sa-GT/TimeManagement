@@ -1,61 +1,293 @@
 ﻿@model TimeManagement.Models.ViewModels.ProfileViewModel
+
 @{
-    ViewData["Title"] = "My Profile";
+    Layout = "~/views/shared/_dashboard.cshtml";
+    var managerId = Context.Session.GetInt32("userId"); // جلب من الجلسة
+
 }
+<div id="timetracker-layout" class="theme-indigo">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- main body area -->
+    <div class="main px-lg-4 px-md-4">
+        <!-- Body: Body -->
+        <div class="body d-flex py-3">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header py-3 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                            <h3 class="h4 mb-0">Profile</h3>
+                        </div>
+                    </div>
+                </div> <!-- Row end  -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-12 col-lg-3">
+                                        @if (!string.IsNullOrEmpty(Model.CurrentImagePath))
+                                        {
+                                            <div class="mt-2">
+                                                <img src="@Model.CurrentImagePath" class="img-thumbnail" width="100" />
+                                            </div>
+                                        }
+                                        <ul class="list-unstyled custom d-flex mb-3 mt-3">
+                                            <li class="me-3"><a href="#" class="card-link"><i class="fa fa-lg fa-facebook"></i></a></li>
+                                            <li class="me-3"><a href="#" class="card-link"><i class="fa fa-lg fa-twitter"></i></a></li>
+                                            <li class="me-3"><a href="#" class="card-link"><i class="fa fa-lg fa-instagram"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12 col-lg-9">
+                                        <h4>@Model.FirstName @Model.LastName</h4>
 
-<div class="container mt-5 mb-5">
-    <div class="card shadow-sm rounded-4">
-        <div class="card-body text-center p-4">
+                                        <div class="d-flex flex-row flex-wrap align-items-center mb-3 mt-2">
+                                            <div class="me-3 me-md-5">
+                                                <small class="text-muted">Department</small>
+                                                <div class="mb-0 fw-bold">@Model.Department</div>
+                                            </div>
+                                            <div class="me-3 me-md-5">
+                                                <small class="text-muted">Position</small>
+                                                <div class="mb-0 fw-bold">@Model.Position</div>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted">Language</small>
+                                                <div class="mb-0 fw-bold">@Model.LanguagePreference</div>
+                                            </div>
+                                        </div>
 
-            <h2 class="mb-4 fw-bold">👤 My Profile</h2>
+                                        <span>
+                                            Welcome to your profile! Here you can see your contact information and update your preferences.
+                                        </span>
 
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    @TempData["Success"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        <ul class="design-box ps-0 mt-3">
+                                            <li>
+                                                <div class="icon text-center">
+                                                    <i class="fa fa-map-marker text-secondary"></i>
+                                                </div>
+                                                <div class="fw-bold mb-0">Address</div>
+                                                <span>Jordan - (Static)</span>
+                                            </li>
+                                            <li>
+                                                <div class="icon text-center">
+                                                    <i class="fa fa-mobile text-secondary"></i>
+                                                </div>
+                                                <div class="fw-bold mb-0">Mobile</div>
+                                                <span>@Model.Phone</span>
+                                            </li>
+                                            <li>
+                                                <div class="icon text-center">
+                                                    <i class="fa fa-envelope text-secondary"></i>
+                                                </div>
+                                                <div class="fw-bold mb-0">Email Address</div>
+                                                <span>@($"{Model.FirstName.ToLower()}{Model.LastName.ToLower()}@company.com")</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            }
+                <div class="row g-3">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
 
-            @if (!string.IsNullOrEmpty(Model.CurrentImagePath))
-            {
-                <img src="@Model.CurrentImagePath" width="130" height="130" class="rounded-circle shadow mb-3" />
-            }
 
-            <table class="table table-hover table-bordered mt-4 w-75 mx-auto">
-                <tbody>
-                    <tr>
-                        <th class="bg-light">First Name</th>
-                        <td>@Model.FirstName</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Last Name</th>
-                        <td>@Model.LastName</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Phone</th>
-                        <td>@Model.Phone</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Department</th>
-                        <td>@Model.Department</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Position</th>
-                        <td>@Model.Position</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-light">Language</th>
-                        <td>@Model.LanguagePreference</td>
-                    </tr>
-                </tbody>
-            </table>
+                    @Html.ValidationMessageFor(m => m.CurrentPassword, "", new { @class = "text-danger" })
 
-            <a href="/Profile/UpdateProfile" class="btn btn-outline-primary mt-3 px-4">
-                ✏️ Edit Profile
-            </a>
+                    <div class="col-12">
+                        @{
+                            var activeTab = ViewData["ActiveTab"]?.ToString() ?? "Company_Settings";
+                        }
+
+                        <ul class="nav nav-tabs tab-body-header rounded d-inline-flex">
+                            <li class="nav-item">
+                                <a class="nav-link @(activeTab == "Company_Settings" ? "active show" : "")" data-bs-toggle="tab" href="#Company_Settings">Edit Profile</a>
+                            </li>
+                           
+                            <li class="nav-item">
+                                <a class="nav-link @(activeTab == "Change_Password" ? "active show" : "")" data-bs-toggle="tab" href="#Change_Password">Change Password</a>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content mt-3">
+                            <div class="tab-pane active show" id="Company_Settings">
+                                <div class="card mb-3">
+                                    <div class="card-header p-3">
+                                        @* <h5 class="card-title">Edit Prof</h5> *@
+                                    </div>
+                                    <div class="card-body">
+                                        <form asp-action="UpdateProfile" method="post" enctype="multipart/form-data" class="row g-3">
+
+                                            <div class="col-md-4 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                                    <input asp-for="FirstName" class="form-control" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                                    <input asp-for="LastName" class="form-control" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                                                    <input asp-for="Phone" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input asp-for="Email" class="form-control" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <label class="form-label">Department</label>
+                                                <input asp-for="Department" class="form-control" />
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="form-label">Position</label>
+                                                    <input asp-for="Position" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="form-label">Language</label>
+                                                    <input asp-for="LanguagePreference" class="form-control" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="form-label">Profile Image</label>
+                                                    <input asp-for="ProfileImage" type="file" class="form-control" />
+                                                    @if (!string.IsNullOrEmpty(Model.CurrentImagePath))
+                                                    {
+                                                        <div class="mt-2">
+                                                            <img src="@Model.CurrentImagePath" class="img-thumbnail" width="100" />
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 col-lg-3">
+                                                <div class="form-group">
+                                                    <label class="form-label">Face Image (Base64)</label>
+                                                    <input asp-for="FaceImageBase64" class="form-control" placeholder="Paste Base64 here" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 mt-4">
+                                                <button type="submit" class="btn btn-primary">SAVE</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                           
+
+                            <div class="tab-pane" id="Change_Password">
+                                <div class="card">
+                                    <div class="card-header p-3">
+                                        <h5 class="card-title">Change Password</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form asp-action="ChangePassword" method="post">
+                                            <div class="row g-3">
+                                                @* <div class="col-lg-4 col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" value="@Model.Username" disabled placeholder="Username">
+                                                    </div>
+                                                </div> *@
+                                                @* <div class="col-lg-4 col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="email" class="form-control" value="@Model.Email" readonly placeholder="Email">
+                                                    </div>
+                                                </div> *@
+                                                @* <div class="col-lg-4 col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" value="@Model.Phone" readonly placeholder="Phone Number">
+                                                    </div>
+                                                </div> *@
+
+                                                <div class="col-12">
+                                                    <div class="mb-2">
+                                                        <input asp-for="CurrentPassword" type="password" class="form-control" placeholder="Current Password" />
+                                                    </div>
+
+                                                    <div class="mb-2">
+                                                        <input id="newPassword" asp-for="NewPassword" type="password" class="form-control" placeholder="New Password" onkeyup="validatePassword()" />
+                                                        <small id="passwordError" class="text-danger d-none">
+                                                            Password must be at least 8 characters, contain uppercase, lowercase, number, and special character.
+                                                        </small>
+                                                    </div>
+
+                                                    <div class="mb-2">
+                                                        <input id="confirmPassword" asp-for="ConfirmNewPassword" type="password" class="form-control" placeholder="Confirm New Password" onkeyup="checkMatch()" />
+                                                        <small id="matchError" class="text-danger d-none">Passwords do not match.</small>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-12 mt-4">
+                                                    <button type="submit" class="btn btn-primary">SAVE</button> &nbsp;
+                                                    <button type="reset" class="btn btn-default">CANCEL</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
+
 </div>
+
+<script>
+    function validatePassword() {
+        var password = document.getElementById("newPassword").value;
+        var error = document.getElementById("passwordError");
+
+        var pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+        if (!pattern.test(password)) {
+            error.classList.remove("d-none");
+        } else {
+            error.classList.add("d-none");
+        }
+
+        checkMatch(); // تحقق من التطابق بعد كل تحديث لكلمة المرور
+    }
+
+    function checkMatch() {
+        var password = document.getElementById("newPassword").value;
+        var confirm = document.getElementById("confirmPassword").value;
+        var error = document.getElementById("matchError");
+
+        if (confirm !== password) {
+            error.classList.remove("d-none");
+        } else {
+            error.classList.add("d-none");
+        }
+    }
+</script>
+
