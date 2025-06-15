@@ -219,7 +219,7 @@
                                         <tbody>
                                         @foreach (var s in Model.Item1)
                                         {
-                                            var userProjects = Model.Item2.Where(p => p.UserId == s.).ToList();
+                                            @* var userProjects = Model.Item2.Where(p => p.UserId == s.).ToList(); *@
 
                                             <tr>
                                                 <td>
@@ -227,19 +227,19 @@
                                                     <span class="fw-bold ms-1">@s.FirstName</span>
                                                 </td>
                                                 <td>
-                                                    @foreach (var proj in userProjects)
+                                                    @* @foreach (var proj in userProjects)
                                                     {
                                                         <div>@proj.Project.ProjectName</div>
-                                                    }
+                                                    } *@
                                                 </td>
                                                 <td>
-                                                    <a href="#">@userProjects.Sum(x => x.Project.Tasks?.Count ?? 0) Tasks</a>
+                                                    @* <a href="#">@userProjects.Sum(x => x.Project.Tasks?.Count ?? 0) Tasks</a> *@
                                                 </td>
                                                 <td>
                                                     <a href="mailto:@s.Email">@s.Email</a>
                                                 </td>
                                                 <td>
-                                                    @s.JoinDate?.ToString("dd/MM/yyyy")
+                                                    @* @s.JoinDate?.ToString("dd/MM/yyyy") *@
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-success">Working</span>

@@ -1,5 +1,5 @@
-﻿@model TimeManagement.ViewModels.LoginViewModel
-@{
+﻿ @model TimeManagement.ViewModels.LoginViewModel
+@*@{
     ViewData["Title"] = "Login";
     Layout = null;
 }
@@ -109,5 +109,285 @@
         </script>
     </div>
 
+</body>
+</html> *@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteStaff | Employee Portal</title>
+    <base target="_self">
+    <script src="https://cdn.tailwindcss.com"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script> *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        dark: '#111827',
+                        light: '#F3F4F6',
+                        gold: '#D4AF37',
+                        platinum: '#E5E4E2'
+                    },
+                    fontFamily: {
+                        'sans': ['"Playfair Display"', 'serif'],
+                        'body': ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        h1, h2, h3, h4, .font-fancy {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .luxury-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f9f9f9 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gold-border {
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #D4AF37 0%, #F9D423 100%) 1;
+        }
+
+        .platinum-bg {
+            background: linear-gradient(135deg, rgba(229, 228, 226, 0.1) 0%, rgba(229, 228, 226, 0.05) 100%);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #10B981 100%);
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+      
+
+        50% {
+            transform: translateY(-15px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 1rem 1rem 1rem 3rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                transition: all 0.3s ease;
+                background-color: #f9fafb;
+            }
+
+                .input-group input:focus {
+                    outline: none;
+                    border-color: #4F46E5;
+                    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+                }
+
+            .input-group i {
+                position: absolute;
+                left: 1rem;
+                top: 1rem;
+                color: #9ca3af;
+            }
+    </style>
+</head>
+<body class="bg-light dark:bg-dark">
+    <!-- Luxury Login Page -->
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <!-- Left Side - Branding and Image -->
+        <div class="lg:w-1/2 relative overflow-hidden hero-gradient text-white">
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-white animate-pulse" style="animation-delay: 0s;"></div>
+                <div class="absolute bottom-10 right-20 w-80 h-80 rounded-full bg-white animate-pulse" style="animation-delay: 0.5s;"></div>
+            </div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-12">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                        <i class="fas fa-users text-primary"></i>
+                    </div>
+                    <span class="text-2xl font-fancy font-bold">EliteStaff</span>
+                </div>
+
+                <div class="max-w-md">
+                    <h1 class="text-4xl md:text-5xl font-fancy font-bold mb-6 leading-tight">
+                        Welcome to Your <span class="text-gold">Employee Portal</span>
+                    </h1>
+                    <p class="text-xl opacity-90 mb-8">
+                        Access your workforce management tools, track your tasks, and manage projects all in one place.
+                    </p>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-80">Trusted by 5,000+ organizations worldwide</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block">
+                    <p class="text-sm opacity-70">© 2023 EliteStaff. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="lg:w-1/2 flex items-center justify-center p-12">
+            <div class="w-full max-w-md luxury-card rounded-2xl shadow-xl p-10 platinum-bg">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-lock-open text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-fancy font-bold mb-2">Employee Login</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Enter your credentials to access your account</p>
+                </div>
+
+                <form asp-controller="Auth" asp-action="Login" method="post" class="space-y-6" enctype="multipart/form-data">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input asp-for="Email" type="email" placeholder="Email Address" class="form-control dark:bg-gray-800 dark:border-gray-700 dark:text-white" />
+                        <span asp-validation-for="Email" class="text-danger text-sm"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input asp-for="Password" type="password" placeholder="Password" class="form-control dark:bg-gray-800 dark:border-gray-700 dark:text-white" />
+                        <span asp-validation-for="Password" class="text-danger text-sm"></span>
+                    </div>
+
+                 
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger text-red-600 bg-red-100 border border-red-300 p-2 rounded">
+                            @ViewBag.Error
+                        </div>
+                    }
+
+                    <div>
+                        <button type="submit" class="w-full relative overflow-hidden px-6 py-3 rounded-lg font-bold bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-lg hover:shadow-purple-500/30 transition group">
+                            <span class="relative z-10">Sign In</span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-purple-600 to-primary opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                        </button>
+                    </div>
+                </form>
+
+
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">
+                        Don't have an account?
+                        <a href="#" class="font-medium text-primary hover:text-purple-600 dark:text-secondary dark:hover:text-green-500"
+                           onclick="event.preventDefault(); navigateTo('register')">
+                            Request access
+                        </a>
+                    </p>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-center space-x-6">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                            <i class="fab fa-google text-red-500"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                            <i class="fab fa-microsoft text-blue-500"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                            <i class="fab fa-apple text-gray-800 dark:text-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:hidden mt-8 text-center">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">© 2023 EliteStaff. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function navigateTo(page) {
+            // In a real application, this would route to the appropriate page
+            console.log(`Navigating to ${page}`);
+            // You would implement actual routing logic here
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            // Here you would typically send this data to your authentication API
+            console.log('Login attempt with:', { email, password, rememberMe });
+
+            // For demo purposes, we'll simulate a successful login
+            setTimeout(() => {
+                alert('Login successful! Redirecting to dashboard...');
+                navigateTo('dashboard');
+            }, 1000);
+        });
+
+        // Theme toggle
+        function setupThemeToggle() {
+            // Check for saved theme preference or use system preference
+            if (localStorage.getItem('color-theme') === 'dark' ||
+                (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupThemeToggle();
+
+            // Prevent default behavior for all links
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', e => e.preventDefault());
+            });
+        });
+    </script>
 </body>
 </html>
