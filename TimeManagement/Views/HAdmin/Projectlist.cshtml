@@ -184,10 +184,9 @@
                 </div>
             </div>
         </div>
-
         <!-- Create Project-->
         <div class="modal fade" id="createproject" tabindex="-1" aria-hidden="true">
-            <form method="post" asp-action="AddProject" asp-controller="HAdmin" enctype="multipart/form-data">
+            <form id="projectForm" method="post" asp-action="AddProject" asp-controller="HAdmin" enctype="multipart/form-data">
                 <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -353,6 +352,15 @@
             if (end) end.value = button.getAttribute('data-end') || '';
             if (priority) priority.value = button.getAttribute('data-priority') || '';
             if (desc) desc.value = button.getAttribute('data-desc') || '';
+        });
+                document.getElementById("projectForm").addEventListener("submit", function (e) {
+            const startDate = new Date(document.getElementById("datepickerded").value);
+            const endDate = new Date(document.getElementById("datepickerdedone").value);
+
+            if (endDate < startDate) {
+                e.preventDefault(); // امنع إرسال الفورم
+                alert("⚠️ End Date cannot be earlier than Start Date.");
+            }
         });
     </script>
 }
