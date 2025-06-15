@@ -1,85 +1,154 @@
-﻿@model TimeManagement.ViewModels.LoginViewModel
-@{
-    ViewData["Title"] = "Login";
-    Layout = null;
-}
+﻿@* @model TimeManagement.ViewModels.LoginViewModel *@
+@* @{ *@
+@*     ViewData["Title"] = "Login"; *@
+@*     Layout = null; *@
+@* } *@
 
+@* <!DOCTYPE html> *@
+@* <html lang="en"> *@
+@* <head> *@
+@*     <meta charset="utf-8" /> *@
+@*     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> *@
+@*     <title>Login - TimeManagement</title> *@
+@*     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" /> *@
+@*     <style> *@
+@*         body { *@
+@*             background: #f0f4f8; *@
+@*             display: flex; *@
+@*             align-items: center; *@
+@*             justify-content: center; *@
+@*             height: 100vh; *@
+@*             font-family: 'Segoe UI', sans-serif; *@
+@*         } *@
+
+@*         .login-card { *@
+@*             background: white; *@
+@*             padding: 2.5rem; *@
+@*             border-radius: 12px; *@
+@*             box-shadow: 0 0 30px rgba(0,0,0,0.1); *@
+@*             width: 100%; *@
+@*             max-width: 420px; *@
+@*         } *@
+
+@*         .btn-primary, .btn-outline-dark { *@
+@*             width: 100%; *@
+@*             border-radius: 8px; *@
+@*             padding: 0.6rem; *@
+@*             margin-top: 8px; *@
+@*         } *@
+
+@*         video { *@
+@*             display: none; *@
+@*             width: 100%; *@
+@*             border-radius: 10px; *@
+@*             margin-top: 10px; *@
+@*         } *@
+
+@*         .alert { *@
+@*             font-size: 0.9rem; *@
+@*         } *@
+@*     </style> *@
+@* </head> *@
+@* <body> *@
+
+@*     <div class="login-card"> *@
+@*         <h2 class="text-center mb-3 fw-bold">Welcome Back</h2> *@
+
+@*         @if (ViewBag.Error != null) *@
+@*         { *@
+@*             <div class="alert alert-danger text-center">@ViewBag.Error</div> *@
+@*         } *@
+
+@*         <form asp-action="Login" method="post" enctype="multipart/form-data"> *@
+@*             <div class="mb-3"> *@
+@*                 <label class="form-label">Email</label> *@
+@*                 <input asp-for="Email" class="form-control" placeholder="example@email.com" /> *@
+@*             </div> *@
+
+@*             <div class="mb-3"> *@
+@*                 <label class="form-label">Password</label> *@
+@*                 <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" /> *@
+@*             </div> *@
+
+@*             <input type="hidden" name="FaceImageBase64" id="faceInput" /> *@
+
+@*             <button type="submit" class="btn btn-primary">Sign In</button> *@
+@*             <button type="button" class="btn btn-outline-dark" onclick="captureFace()">👁️ Login with Face</button> *@
+
+@*             <video id="video" autoplay muted></video> *@
+@*         </form> *@
+
+@*         <script> *@
+@*             async function captureFace() { *@
+@*                 const video = document.getElementById("video"); *@
+@*                 video.style.display = "block"; *@
+
+@*                 const stream = await navigator.mediaDevices.getUserMedia({ video: true }); *@
+@*                 video.srcObject = stream; *@
+
+@*                 setTimeout(() => { *@
+@*                     const canvas = document.createElement("canvas"); *@
+@*                     canvas.width = video.videoWidth; *@
+@*                     canvas.height = video.videoHeight; *@
+@*                     const ctx = canvas.getContext("2d"); *@
+@*                     ctx.drawImage(video, 0, 0); *@
+
+@*                     const base64Image = canvas.toDataURL("image/png"); *@
+@*                     document.getElementById("faceInput").value = base64Image; *@
+
+@*                     // إزالة الإيميل والباسورد عند تسجيل الدخول بالوجه *@
+@*                     document.querySelector("input[name='Email']").value = ""; *@
+@*                     document.querySelector("input[name='Password']").value = ""; *@
+
+@*                     stream.getTracks().forEach(track => track.stop()); *@
+@*                     video.style.display = "none"; *@
+
+@*                     document.querySelector("form").submit(); *@
+@*                 }, 3000); *@
+@*             } *@
+@*         </script> *@
+@*     </div> *@
+
+@* </body> *@
+@* </html> *@
+@model TimeManagement.ViewModels.LoginViewModel
+@{ 
+     ViewData["Title"] = "Login"; 
+     Layout = null; 
+} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - TimeManagement</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            background: #f0f4f8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteStaff | Employee Portal</title>
+    <base target="_self">
+    <script src="https://cdn.tailwindcss.com"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script> *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+	<link href="~/css/loginstyle.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        dark: '#111827',
+                        light: '#F3F4F6',
+                        gold: '#D4AF37',
+                        platinum: '#E5E4E2'
+                    },
+                    fontFamily: {
+                        'sans': ['"Playfair Display"', 'serif'],
+                        'body': ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
         }
-
-        .login-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 420px;
-        }
-
-        .btn-primary, .btn-outline-dark {
-            width: 100%;
-            border-radius: 8px;
-            padding: 0.6rem;
-            margin-top: 8px;
-        }
-
-        video {
-            display: none;
-            width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .alert {
-            font-size: 0.9rem;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="login-card">
-        <h2 class="text-center mb-3 fw-bold">Welcome Back</h2>
-
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-danger text-center">@ViewBag.Error</div>
-        }
-
-        <form asp-action="Login" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input asp-for="Email" class="form-control" placeholder="example@email.com" />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
-            </div>
-
-            <input type="hidden" name="FaceImageBase64" id="faceInput" />
-
-            <button type="submit" class="btn btn-primary">Sign In</button>
-            <button type="button" class="btn btn-outline-dark" onclick="captureFace()">👁️ Login with Face</button>
-
-            <video id="video" autoplay muted></video>
-        </form>
-
-        <script>
-            async function captureFace() {
+                    async function captureFace() {
                 const video = document.getElementById("video");
                 video.style.display = "block";
 
@@ -106,8 +175,145 @@
                     document.querySelector("form").submit();
                 }, 3000);
             }
-        </script>
+    </script>
+</head>
+<body class="bg-light dark:bg-dark">
+    <!-- Luxury Login Page -->
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <!-- Left Side - Branding and Image -->
+        <div class="lg:w-1/2 relative overflow-hidden hero-gradient text-white">
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-white animate-pulse" style="animation-delay: 0s;"></div>
+                <div class="absolute bottom-10 right-20 w-80 h-80 rounded-full bg-white animate-pulse" style="animation-delay: 0.5s;"></div>
+            </div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-12">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                        <i class="fas fa-users text-primary"></i>
+                    </div>
+                    <span class="text-2xl font-fancy font-bold">EliteStaff</span>
+                </div>
+
+                <div class="max-w-md">
+                    <h1 class="text-4xl md:text-5xl font-fancy font-bold mb-6 leading-tight">
+                        Welcome to Your <span class="text-gold">Employee Portal</span>
+                    </h1>
+                    <p class="text-xl opacity-90 mb-8">
+                        Access your workforce management tools, track your tasks, and manage projects all in one place.
+                    </p>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-80">Trusted by 5,000+ organizations worldwide</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block">
+                    <p class="text-sm opacity-70">© 2023 EliteStaff. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="lg:w-1/2 flex items-center justify-center p-12">
+            <div class="w-full max-w-md luxury-card rounded-2xl shadow-xl p-10 platinum-bg">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-lock-open text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-fancy font-bold mb-2">Employee Login</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Enter your credentials to access your account</p>
+                </div>
+
+                <form asp-action="Login" method="post" enctype="multipart/form-data" class="space-y-6">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input  asp-for="Email" id="email" placeholder="Email Address" required
+                               class="dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input asp-for="Password" type="password" id="password" placeholder="Password" required
+                               class="dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                                class="w-full relative overflow-hidden px-6 py-3 rounded-lg font-bold bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-lg hover:shadow-purple-500/30 transition group">
+                            <span class="relative z-10">Sign In</span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-purple-600 to-primary opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                        </button>
+                        <button type="button"
+                                class="w-full flex items-center justify-start gap-3 px-6 py-3 rounded-xl bg-white border border-gray-300 hover:border-purple-500 shadow-sm hover:shadow-md transition-all duration-300 group"
+                                onclick="captureFace()">
+                            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white text-lg group-hover:scale-110 transition">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <span class="text-gray-800 font-semibold group-hover:text-purple-600 transition">Login with Face Recognition</span>
+                        </button>
+                            <video id="video" autoplay muted></video>
+                    </div>
+                </form>
+                <div class="lg:hidden mt-8 text-center">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">© 2023 EliteStaff. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script>
+        // Navigation functions
+        function navigateTo(page) {
+            // In a real application, this would route to the appropriate page
+            console.log(`Navigating to ${page}`);
+            // You would implement actual routing logic here
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            // Here you would typically send this data to your authentication API
+            console.log('Login attempt with:', { email, password, rememberMe });
+
+            // For demo purposes, we'll simulate a successful login
+            setTimeout(() => {
+                alert('Login successful! Redirecting to dashboard...');
+                navigateTo('dashboard');
+            }, 1000);
+        });
+
+        // Theme toggle
+        function setupThemeToggle() {
+            // Check for saved theme preference or use system preference
+            if (localStorage.getItem('color-theme') === 'dark' ||
+                (!localStorage.getItem('color-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupThemeToggle();
+
+            // Prevent default behavior for all links
+            // document.querySelectorAll('a').forEach(link => {
+            //     link.addEventListener('click', e => e.preventDefault());
+            // });
+        });
+    </script>
 </body>
 </html>

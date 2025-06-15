@@ -4,25 +4,25 @@ using TimeManagement.Models;
 using TimeManagement.Models.ViewModels;
 using TimeManagement.ViewModels;
 
-//namespace TimeManagement.Controllers
-//{
-//    public class ProfileController : Controller
-//    {
-//        private readonly MyDbContext _context;
+namespace TimeManagement.Controllers
+{
+    public class ProfileController : Controller
+    {
+        private readonly MyDbContext _context;
 
-//        public ProfileController(MyDbContext context)
-//        {
-//            _context = context;
-//        }
+        public ProfileController(MyDbContext context)
+        {
+            _context = context;
+        }
 
-//        [HttpGet]
-//        public IActionResult Profile()
-//        {
-//            var userId = HttpContext.Session.GetInt32("UserId");
-//            if (userId == null) return RedirectToAction("Login", "Auth");
+        [HttpGet]
+        public IActionResult Profile()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Login", "Auth");
 
-//            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-//            if (user == null) return NotFound();
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null) return NotFound();
 
             var model = new ProfileViewModel
             {
@@ -48,17 +48,17 @@ using TimeManagement.ViewModels;
 //            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
 //            if (user == null) return NotFound();
 
-            var model = new ProfileViewModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Email = user.Email,
-                Department = user.Department,
-                Position = user.Position,
-                LanguagePreference = user.LanguagePreference,
-                CurrentImagePath = user.ProfilePicture
-            };
+            //var model1 = new ProfileViewModel
+            //{
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName,
+            //    Phone = user.Phone,
+            //    Email = user.Email,
+            //    Department = user.Department,
+            //    Position = user.Position,
+            //    LanguagePreference = user.LanguagePreference,
+            //    CurrentImagePath = user.ProfilePicture
+            //};
 
 //            return View(model);
 //        }
