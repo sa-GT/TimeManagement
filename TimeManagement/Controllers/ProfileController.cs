@@ -48,17 +48,17 @@ namespace TimeManagement.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null) return NotFound();
 
-            var model = new ProfileViewModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Email = user.Email,
-                Department = user.Department,
-                Position = user.Position,
-                LanguagePreference = user.LanguagePreference,
-                CurrentImagePath = user.ProfilePicture
-            };
+            //var model1 = new ProfileViewModel
+            //{
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName,
+            //    Phone = user.Phone,
+            //    Email = user.Email,
+            //    Department = user.Department,
+            //    Position = user.Position,
+            //    LanguagePreference = user.LanguagePreference,
+            //    CurrentImagePath = user.ProfilePicture
+            //};
 
             return View(model);
         }

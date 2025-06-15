@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteStaff | Premium Employee Management</title>
+    <base target="_self">
+    <script src="https://cdn.tailwindcss.com"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script> *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="~/css/landingpage.css" rel="stylesheet" />
+</head>
+<body class="bg-light dark:bg-dark text-gray-800 dark:text-platinum">
+
+
+    <!-- Main Content -->
+    <main class="pt-24">
+        <!-- Hero Section -->
+        <section class="relative hero-gradient text-white pt-32 pb-24 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10">
+                <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-white animate-pulse" style="animation-delay: 0s;"></div>
+                <div class="absolute bottom-10 right-20 w-80 h-80 rounded-full bg-white animate-pulse" style="animation-delay: 0.5s;"></div>
+            </div>
+
+            <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 relative z-10">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-white/20 px-4 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm">
+                            <i class="fas fa-crown mr-2 text-gold"></i> Premium Workforce Solution
+                        </div>
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-fancy font-bold mb-6 leading-tight">
+                        Transform Your <span class="text-gold">Workforce</span> Management
+                    </h1>
+                    <p class="text-xl mb-8 max-w-lg opacity-90">
+                        EliteStaff combines powerful attendance tracking, task management, and project coordination in one seamless platform designed for modern enterprises.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                        <button class="relative overflow-hidden px-8 py-4 rounded-lg font-bold bg-gold text-dark hover:shadow-lg hover:shadow-yellow-500/40 transition group" onclick="navigateTo('demo')">
+                            <span class="relative z-10">Get Started</span>
+                            <span class="absolute inset-0 bg-gradient-to-r from-gold to-yellow-300 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                        </button>
+                        <button class="px-8 py-4 rounded-lg font-bold border-2 border-white hover:bg-white/10 transition" onclick="navigateTo('features')">
+                            Explore Features <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center mt-12 space-x-4">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                        </div>
+                        <div>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            </div>
+                            <p class="text-sm opacity-80">Trusted by 5,000+ organizations worldwide</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 relative">
+                    <div class="relative floating">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                             alt="Employee Management Dashboard"
+                             class="rounded-2xl shadow-2xl w-full max-w-2xl border-4 border-white/20">
+                        <div class="absolute -bottom-6 -right-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-xl gold-border">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-white text-xl"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="font-bold">+47% Efficiency</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Average improvement</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Services -->
+        <section class="py-24 bg-gray-50 dark:bg-gray-900" id="features">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-20">
+                    <div class="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-gray-800 shadow-sm mb-6">
+                        <span class="text-primary dark:text-secondary font-medium">Core Services</span>
+                    </div>
+                    <h2 class="text-4xl font-fancy font-bold mb-4">Comprehensive <span class="text-gold">Employee Management</span></h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        Everything you need to manage your workforce with precision and efficiency
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Attendance Tracking -->
+                    <div class="luxury-card rounded-2xl p-8 relative overflow-hidden platinum-bg">
+                        <div class="absolute top-6 right-6 text-5xl opacity-10 feature-icon">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mb-6">
+                            <i class="fas fa-user-clock text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-fancy font-bold mb-4">Attendance Tracking</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">
+                            Advanced systems to monitor employee presence with precision and reliability.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Biometric and mobile check-ins</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Real-time attendance monitoring</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Automated payroll integration</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Geofencing and location verification</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="mt-6 inline-flex items-center text-primary dark:text-secondary font-medium hover:underline" onclick="event.preventDefault(); navigateTo('attendance')">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- Task Management -->
+                    <div class="luxury-card rounded-2xl p-8 relative overflow-hidden platinum-bg">
+                        <div class="absolute top-6 right-6 text-5xl opacity-10 feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mb-6">
+                            <i class="fas fa-tasks text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-fancy font-bold mb-4">Task Management</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">
+                            Streamline work allocation and progress tracking across your organization.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Visual task boards and workflows</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Priority and deadline management</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Automated reminders and follow-ups</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Performance analytics</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="mt-6 inline-flex items-center text-primary dark:text-secondary font-medium hover:underline" onclick="event.preventDefault(); navigateTo('tasks')">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- Project Management -->
+                    <div class="luxury-card rounded-2xl p-8 relative overflow-hidden platinum-bg">
+                        <div class="absolute top-6 right-6 text-5xl opacity-10 feature-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mb-6">
+                            <i class="fas fa-project-diagram text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-fancy font-bold mb-4">Project Management</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">
+                            Complete oversight of projects from conception to completion.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Gantt charts and timelines</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Resource allocation tools</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Collaboration workspaces</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                                <span>Budget and milestone tracking</span>
+                            </li>
+                        </ul>
+                        <a href="#" class="mt-6 inline-flex items-center text-primary dark:text-secondary font-medium hover:underline" onclick="event.preventDefault(); navigateTo('projects')">
+                            Learn more <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Attendance Tracking Section -->
+        <section class="py-24 bg-white dark:bg-gray-900 relative overflow-hidden">
+            <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12 relative z-10">
+                    <h2 class="text-4xl font-fancy font-bold mb-6">Precision <span class="text-gold">Attendance Tracking</span></h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                        Our advanced attendance system eliminates guesswork and provides accurate, real-time data about your workforce.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-fingerprint"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Multiple Check-in Methods</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Biometric, mobile app, web portal, and NFC card options for flexible attendance tracking.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Location Verification</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Geofencing ensures employees are at designated work locations when clocking in.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Comprehensive Reporting</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Generate detailed attendance reports for payroll, compliance, and analytics.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 relative">
+                    <div class="relative floating">
+                        <img src="https://images.unsplash.com/photo-1521791055366-0d553872125f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                             alt="Attendance Tracking"
+                             class="rounded-2xl shadow-2xl w-full border-4 border-white/20">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Management Section -->
+        <section class="py-24 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
+            <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 order-2 lg:order-1 mt-12 lg:mt-0 lg:pl-12 relative z-10">
+                    <div class="relative floating">
+                        <img src="https://images.unsplash.com/photo-1579389083078-4e7018379f7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                             alt="Task Management"
+                             class="rounded-2xl shadow-2xl w-full border-4 border-white/20">
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 order-1 lg:order-2 lg:pr-12 relative z-10">
+                    <h2 class="text-4xl font-fancy font-bold mb-6">Efficient <span class="text-gold">Task Management</span></h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                        Assign, track, and manage tasks with unprecedented clarity and efficiency across your organization.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-list-check"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Visual Task Boards</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Kanban-style boards to visualize workflow and task progress at a glance.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Automated Notifications</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Alerts for approaching deadlines, task assignments, and completions.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Performance Analytics</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Track individual and team productivity metrics to optimize performance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Management Section -->
+        <section class="py-24 bg-white dark:bg-gray-900 relative overflow-hidden">
+            <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12 relative z-10">
+                    <h2 class="text-4xl font-fancy font-bold mb-6">Comprehensive <span class="text-gold">Project Management</span></h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                        From small teams to enterprise portfolios, manage all your projects with precision and clarity.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-diagram-project"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Gantt Charts & Timelines</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Visualize project schedules, dependencies, and critical paths.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Resource Allocation</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Optimize team assignments based on skills, availability, and workload.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-r from-primary to-purple-600 text-white">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold">Budget Tracking</h4>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Monitor project expenses and compare against budgets in real-time.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 relative">
+                    <div class="relative floating">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Project Management"
+                         class="rounded-2xl shadow-2xl w-full border-4 border-white/20">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @* <!-- CTA Section --> *@
+        @* <section class="relative py-32 overflow-hidden"> *@
+        @*     <div class="absolute inset-0 bg-gradient-to-r from-primary to-purple-600 opacity-95"></div> *@
+        @*     <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center opacity-20"></div> *@
+
+        @*     <div class="container mx-auto px-6 relative z-10"> *@
+        @*         <div class="max-w-4xl mx-auto text-center"> *@
+        @*             <h2 class="text-4xl md:text-5xl font-fancy font-bold text-white mb-6">Ready to Transform Your Workforce Management?</h2> *@
+        @*             <p class="text-xl text-white/90 mb-10"> *@
+        @*                 Experience the EliteStaff difference with a personalized demonstration from our team. *@
+        @*             </p> *@
+
+        @*             <div class="flex flex-col sm:flex-row justify-center gap-6"> *@
+        @*                 <button class="relative overflow-hidden px-10 py-5 rounded-xl font-bold bg-gold text-dark hover:shadow-lg hover:shadow-yellow-500/40 transition group" onclick="navigateTo('demo')"> *@
+        @*                     <span class="relative z-10">Request Demo</span> *@
+        @*                     <span class="absolute inset-0 bg-gradient-to-r from-gold to-yellow-300 opacity-0 group-hover:opacity-100 transition duration-300"></span> *@
+        @*                 </button> *@
+        @*                 <button class="px-10 py-5 rounded-xl font-bold border-2 border-white text-white hover:bg-white/10 transition" onclick="navigateTo('contact')"> *@
+        @*                     Contact Sales <i class="fas fa-arrow-right ml-2"></i> *@
+        @*                 </button> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </section> *@
+    </main>
+</body>
+</html>

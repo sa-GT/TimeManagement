@@ -180,6 +180,56 @@ namespace TimeManagement.Controllers.Habib
 			await myDbContext.SaveChangesAsync();
 			return RedirectToAction("Projectlist");
 		}
+		[HttpPost]
+		public async Task<IActionResult> AddEmployee(IFormCollection form, IFormFile ProfilePicture)
+		{
+			var managerId = HttpContext.Session.GetInt32("UserId");
 
+			var user = new User
+			{
+				Username = form["Username"],
+				Email = form["Email"],
+				Password = form["Password"],
+				FirstName = form["First_Name"],
+				LastName = form["Last_Name"],
+				Role = form["Role"],
+				Department = form["Department"],
+				Position = form["Position"],
+				ProfilePicture = "",
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now,
+				ManagerId = managerId
+			};
+
+			// رفع الصورة
+			if (ProfilePicture != null && ProfilePicture.Length > 0)
+			{
+				var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePicture.FileName);
+				var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+
+				using (var stream = new FileStream(filePath, FileMode.Create))
+				{
+					await ProfilePicture.CopyToAsync(stream);
+				}
+
+				user.ProfilePicture = "/uploads/" + fileName;
+			}
+
+			myDbContext.Users.Add(user);
+			await myDbContext.SaveChangesAsync();
+
+			return RedirectToAction("ViewAllEmployee");
+		}
+		public IActionResult DeleteEmployee(IFormCollection form)
+		{
+			var id = form["id"];
+			var user = myDbContext.Users.Find(id);
+			if (user != null)
+			{
+				myDbContext.Users.Remove(user);
+				myDbContext.SaveChanges();
+			}
+			return RedirectToAction("ViewAllEmployee");
+		}
 	}
 }
