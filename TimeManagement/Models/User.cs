@@ -41,6 +41,8 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
+    public string? Ipaddress { get; set; }
+
     public int? ManagerId { get; set; }
 
     public string? FaceImage { get; set; }

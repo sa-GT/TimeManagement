@@ -29,46 +29,31 @@ namespace TimeManagement.Controllers
             User? user = null;
 
             bool hasEmailAndPassword = !string.IsNullOrWhiteSpace(model.Email) && !string.IsNullOrWhiteSpace(model.Password);
-            bool hasFace = !string.IsNullOrWhiteSpace(model.FaceImageBase64);
 
-            // ✅ تسجيل الدخول بالبريد والباسورد فقط
-            if (hasEmailAndPassword && !hasFace)
+            if (hasEmailAndPassword)
             {
                 user = _context.Users.FirstOrDefault(u =>
                     u.Email.ToLower() == model.Email.ToLower() &&
                     u.Password == model.Password);
             }
 
-            // ✅ تسجيل الدخول بالوجه فقط
-            else if (hasFace && !hasEmailAndPassword)
-            {
-                var usersWithFace = _context.Users
-                    .Where(u => u.FaceImage != null)
-                    .ToList();
+          
 
-                foreach (var u in usersWithFace)
-                {
-                    if (u.FaceImage == model.FaceImageBase64) // مقارنة نصية مبدئية
-                    {
-                        user = u;
-                        break;
-                    }
-                }
-            }
-
-            // ❌ لم يتم التحقق
             if (user == null)
             {
-                ViewBag.Error = "❌ Invalid credentials or face not recognized.";
+                ViewBag.Error = "❌ Invalid credentials";
                 return View(model);
             }
 
-            // ✅ تسجيل دخول ناجح
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("Role", user.Role);
+            HttpContext.Session.SetString("UserName", user.FirstName+" "+user.LastName);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserImage", user.ProfilePicture ?? "/assets/images/profile_av.svg");
 
-            return user.Role == "admin"
-                ? RedirectToAction("ViewAllEmployee", "HAdmin")
+
+            return user.Role.ToLower() == "admin"
+                 ? RedirectToAction("ViewAllEmployee", "HAdmin")
                 : RedirectToAction("Profile", "Profile");
         }
 

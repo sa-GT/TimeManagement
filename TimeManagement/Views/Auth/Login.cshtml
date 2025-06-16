@@ -228,7 +228,7 @@
                     <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mx-auto mb-6">
                         <i class="fas fa-lock-open text-white text-2xl"></i>
                     </div>
-                    <h2 class="text-3xl font-fancy font-bold mb-2">Employee Login</h2>
+                    <h2 class="text-3xl font-fancy font-bold mb-2">Login</h2>
                     <p class="text-gray-600 dark:text-gray-300">Enter your credentials to access your account</p>
                 </div>
 
@@ -268,6 +268,178 @@
             </div>
         </div>
     </div>
+
+</body>
+</html> 
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteStaff | Employee Portal</title>
+    <base target="_self">
+    <script src="https://cdn.tailwindcss.com"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script> *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        dark: '#111827',
+                        light: '#F3F4F6',
+                        gold: '#D4AF37',
+                        platinum: '#E5E4E2'
+                    },
+                    fontFamily: {
+                        'sans': ['"Playfair Display"', 'serif'],
+                        'body': ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        h1, h2, h3, h4, .font-fancy {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .luxury-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f9f9f9 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gold-border {
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #D4AF37 0%, #F9D423 100%) 1;
+        }
+
+        .platinum-bg {
+            background: linear-gradient(135deg, rgba(229, 228, 226, 0.1) 0%, rgba(229, 228, 226, 0.05) 100%);
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #10B981 100%);
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+      
+
+        50% {
+            transform: translateY(-15px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 1rem 1rem 1rem 3rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                transition: all 0.3s ease;
+                background-color: #f9fafb;
+            }
+
+                .input-group input:focus {
+                    outline: none;
+                    border-color: #4F46E5;
+                    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+                }
+
+            .input-group i {
+                position: absolute;
+                left: 1rem;
+                top: 1rem;
+                color: #9ca3af;
+            }
+    </style>
+</head>
+<body class="bg-light dark:bg-dark">
+    <!-- Luxury Login Page -->
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <!-- Left Side - Branding and Image -->
+        <div class="lg:w-1/2 relative overflow-hidden hero-gradient text-white">
+            <div class="absolute inset-0 opacity-20">
+                <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-white animate-pulse" style="animation-delay: 0s;"></div>
+                <div class="absolute bottom-10 right-20 w-80 h-80 rounded-full bg-white animate-pulse" style="animation-delay: 0.5s;"></div>
+            </div>
+
+            <div class="relative z-10 h-full flex flex-col justify-between p-12">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                        <i class="fas fa-users text-primary"></i>
+                    </div>
+                    <span class="text-2xl font-fancy font-bold">EliteStaff</span>
+                </div>
+
+                <div class="max-w-md">
+                    <h1 class="text-4xl md:text-5xl font-fancy font-bold mb-6 leading-tight">
+                        Welcome to Your <span class="text-gold">Employee Portal</span>
+                    </h1>
+                    <p class="text-xl opacity-90 mb-8">
+                        Access your workforce management tools, track your tasks, and manage projects all in one place.
+                    </p>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="flex -space-x-2">
+                            <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="User" class="w-10 h-10 rounded-full border-2 border-white">
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-80">Trusted by 5,000+ organizations worldwide</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block">
+                    <p class="text-sm opacity-70">© 2023 EliteStaff. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        @* <div class="lg:w-1/2 flex items-center justify-center p-12">
+            <div class="w-full max-w-md luxury-card rounded-2xl shadow-xl p-10 platinum-bg">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-purple-600 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-lock-open text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-fancy font-bold mb-2">Employee Login</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Enter your credentials to access your account</p>
+                </div> *@
 
     <script>
         // Navigation functions

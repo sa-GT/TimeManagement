@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Attendance Result";
+    Layout = "_Dashboard";
     var message = Html.Raw(ViewBag.Message ?? "Unknown result");
     var status = Html.Raw(ViewBag.Status ?? "info");
 }

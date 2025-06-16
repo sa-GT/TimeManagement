@@ -20,6 +20,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.4.0" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="25.2.0" />
   </ItemGroup>
 
 </Project>
