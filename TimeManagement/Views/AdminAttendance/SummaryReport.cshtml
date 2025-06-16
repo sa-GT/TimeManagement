@@ -1,0 +1,35 @@
+﻿@model List<TimeManagement.ViewModels.AttendanceSummaryViewModel>
+@{
+    ViewData["Title"] = "Attendance Summary Report";
+    Layout = "_Dashboard";
+}
+
+<h2 class="mb-4">Attendance Summary</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Employee</th>
+            <th>Present Days</th>
+            <th>Incomplete Days</th>
+            <th>Absent Days</th>
+            <th>Total Work Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@Model[i].FullName</td>
+                <td>@Model[i].PresentDays</td>
+                <td>@Model[i].IncompleteDays</td>
+                <td>@Model[i].AbsentDays</td>
+                <td>@Model[i].TotalHours</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-danger mt-3" href="@Url.Action("ExportSummaryPdf", "AdminAttendance")">Download PDF</a>

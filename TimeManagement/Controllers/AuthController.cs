@@ -47,9 +47,13 @@ namespace TimeManagement.Controllers
 
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("Role", user.Role);
+            HttpContext.Session.SetString("UserName", user.FirstName+" "+user.LastName);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserImage", user.ProfilePicture ?? "/assets/images/profile_av.svg");
 
-            return user.Role == "admin"
-                ? RedirectToAction("ViewAllEmployee", "HAdmin")
+
+            return user.Role.ToLower() == "admin"
+                 ? RedirectToAction("ViewAllEmployee", "HAdmin")
                 : RedirectToAction("Profile", "Profile");
         }
 
