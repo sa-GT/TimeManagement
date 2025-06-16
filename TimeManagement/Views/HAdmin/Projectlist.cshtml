@@ -3,7 +3,6 @@
     Layout = "~/views/shared/_dashboard.cshtml";
   }
 <div id="timetracker-layout" class="theme-indigo">
-
     <!-- main body area -->
     <div class="main px-lg-4 px-md-4">
         <!-- Body: Body -->
@@ -15,12 +14,12 @@
                             <h3 class="h4 py-3 mb-0">Projects</h3>
                             <div class="d-flex py-2 project-tab flex-wrap w-sm-100 ms-auto">
                                 <button type="button" class="btn btn-dark w-sm-100 mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#createproject"><i class="icofont-plus-circle me-2 fs-6"></i>Create Project</button>
-                                <ul class="nav nav-tabs tab-body-header rounded ms-0 ms-md-3 prtab-set w-sm-100" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#All-list" role="tab">All</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Started-list" role="tab">Started</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Approval-list" role="tab">Approval</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Completed-list" role="tab">Completed</a></li>
-                                </ul>
+                                @* <ul class="nav nav-tabs tab-body-header rounded ms-0 ms-md-3 prtab-set w-sm-100" role="tablist"> *@
+                                @*     <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#All-list" role="tab">All</a></li> *@
+                                @*     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Started-list" role="tab">Started</a></li> *@
+                                @*     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Approval-list" role="tab">Approval</a></li> *@
+                                @*     <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#Completed-list" role="tab">Completed</a></li> *@
+                                @* </ul> *@
                             </div>
                         </div>
                     </div>
@@ -230,14 +229,14 @@
                                     </div>
                                 </div>
                                 <div class="row g-3 mb-3">
-                                    <div class="col-sm-12">
-                                        <label class="form-label">Notifation Sent</label>
-                                        <select class="form-select" aria-label="Default select example">
-                                            <option selected>All</option>
-                                            <option value="1">Team Leader Only</option>
-                                            <option value="2">Team Member Only</option>
-                                        </select>
-                                    </div>
+                                    @* <div class="col-sm-12"> *@
+                                    @*     <label class="form-label">Notifation Sent</label> *@
+                                    @*     <select class="form-select" aria-label="Default select example"> *@
+                                    @*         <option selected>All</option> *@
+                                    @*         <option value="1">Team Leader Only</option> *@
+                                    @*         <option value="2">Team Member Only</option> *@
+                                    @*     </select> *@
+                                    @* </div> *@
 
                                     <div class="col-sm-12">
                                         <label for="formFileMultipleone" class="form-label">Task Assign Person</label>
@@ -251,10 +250,10 @@
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
-                                <div class="col-sm">
-                                    <label for="formFileMultipleone" class="form-label">Budget</label>
-                                    <input type="number" name="Budget" class="form-control">
-                                </div>
+                                @* <div class="col-sm"> *@
+                                @*     <label for="formFileMultipleone" class="form-label">Budget</label> *@
+                                @*     <input type="number" name="Budget" class="form-control"> *@
+                                @* </div> *@
                                 <div class="col-sm">
                                     <label for="formFileMultipleone" class="form-label">Priority</label>
                                     <select class="form-select" name="Priority" aria-label="Default select Priority">
