@@ -70,61 +70,68 @@ namespace TimeManagement.Controllers.Ali
             return View();
         }
 
-        // ✅ يعرض المهام الخاصة بالمستخدم الحالي فقط
-        public IActionResult MyTasks(int? projectId = null)
-        {
-            var currentUserId = HttpContext.Session.GetInt32("UserId");
+		public IActionResult MyTasks(int? projectId = null)
+		{
+			var currentUserId = HttpContext.Session.GetInt32("UserId");
             if (currentUserId == null)
                 return RedirectToAction("Login", "Users");
+			// جلب المعرفات الخاصة بالمشاريع المرتبط بها المستخدم
+			var projectIds = _context.ProjectMembers
+				.Where(pm => pm.UserId == currentUserId)
+				.Select(pm => pm.ProjectId)
+				.Distinct()
+				.ToList();
 
-            // 1. جلب المشاريع اللي المستخدم عضو فيها
-            var projectIds = _context.ProjectMembers
-                .Where(pm => pm.UserId == currentUserId)
-                .Select(pm => pm.ProjectId)
-                .Distinct()
-                .ToList();
+			// جلب المشاريع التي ينتمي إليها المستخدم
+			var userProjects = _context.Projects
+				.Where(p => projectIds.Contains(p.Id))
+				.ToList();
 
-            var userProjects = _context.Projects
-                .Where(p => projectIds.Contains(p.Id))
-                .ToList();
+			if (!userProjects.Any())
+			{
+				TempData["Error"] = "You are not assigned to any project.";
+				ViewBag.Projects = new SelectList(new List<Project>(), "Id", "Name");
+				return View();
+			}
 
-            // 2. إذا ما تم اختيار مشروع، اختار أول واحد
-            int? selectedProjectId = projectId ?? userProjects.FirstOrDefault()?.Id;
+			// اختيار أول مشروع افتراضيًا إن لم يتم تحديده
+			int selectedProjectId = projectId ?? userProjects.First().Id;
 
-            // 3. جلب المهام حسب المشروع والمستخدم مع المرفقات
-            ViewBag.Todo = _context.Tasks
-                .Where(t => t.Status == "todo" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
-                .Include(t => t.Project)
-                .Include(t => t.TaskAttachments)
-                .ToList();
+			// جلب المهام حسب الحالة والمشروع والمستخدم الحالي
+			ViewBag.Todo = _context.Tasks
+				.Where(t => t.Status == "todo" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
+				.Include(t => t.Project)
+				.Include(t => t.TaskAttachments)
+				.ToList();
 
-            ViewBag.InProgress = _context.Tasks
-                .Where(t => t.Status == "in-progress" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
-                .Include(t => t.Project)
-                .Include(t => t.TaskAttachments)
-                .ToList();
+			ViewBag.InProgress = _context.Tasks
+				.Where(t => t.Status == "in-progress" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
+				.Include(t => t.Project)
+				.Include(t => t.TaskAttachments)
+				.ToList();
 
-            ViewBag.NeedsReview = _context.Tasks
-                .Where(t => t.Status == "review" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
-                .Include(t => t.Project)
-                .Include(t => t.TaskAttachments)
-                .ToList();
+			ViewBag.NeedsReview = _context.Tasks
+				.Where(t => t.Status == "review" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
+				.Include(t => t.Project)
+				.Include(t => t.TaskAttachments)
+				.ToList();
 
-            ViewBag.Completed = _context.Tasks
-                .Where(t => t.Status == "completed" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
-                .Include(t => t.Project)
-                .Include(t => t.TaskAttachments)
-                .ToList();
+			ViewBag.Completed = _context.Tasks
+				.Where(t => t.Status == "completed" && t.AssignedTo == currentUserId && t.ProjectId == selectedProjectId)
+				.Include(t => t.Project)
+				.Include(t => t.TaskAttachments)
+				.ToList();
 
-            // 4. تمرير قائمة المشاريع والاختيار الحالي
-            ViewBag.Projects = new SelectList(userProjects, "Id", "Name", selectedProjectId);
-            ViewBag.SelectedProjectId = selectedProjectId;
+			// تمرير قائمة المشاريع و المشروع المحدد
+			ViewBag.Projects = new SelectList(userProjects, "Id", "Name", selectedProjectId);
+			ViewBag.SelectedProjectId = selectedProjectId;
 
-            return View();
-        }
+			return View();
+		}
 
 
-        [HttpPost]
+
+		[HttpPost]
         public IActionResult Create([Bind("ProjectId,TaskName,Category,StartDate,DueDate,AssignedTo,Priority,Description")] Task task)
         {
             task.Status = "todo";

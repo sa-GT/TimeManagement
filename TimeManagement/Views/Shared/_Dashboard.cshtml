@@ -83,18 +83,22 @@
                             @if (role?.ToLower() == "admin")
                             {
                                 <li><a class="ms-link" asp-action="Projectlist" asp-controller="HAdmin">Project List</a></li>
+                                <li><a class="ms-link" asp-action="Board" asp-controller="Tasks">Task Progress</a></li>
                                 <li><a class="ms-link" asp-action="ViewAllEmployee" asp-controller="HAdmin">Employee</a></li>
                             }
-                            <li><a class="ms-link" asp-action="Board" asp-controller="Tasks">Task Progress</a></li>
-                            <li><a class="ms-link" href="tickets.html">Ticket List</a></li>
+                            @if (role?.ToLower() == "employee")
+                            {
+                                <li><a class="ms-link" asp-action="MyTasks" asp-controller="Tasks">Task Progress</a></li>
+                            }
+                            @* <li><a class="ms-link" href="tickets.html">Ticket List</a></li> *@
                             @* <li><a class="ms-link" href="ticket-detail.html">Ticket Details</a></li> *@
                             @* <li><a class="ms-link" href="timesheet.html">Timesheet</a></li> *@
                         </ul>
                     </li>
                     <li class="collapsed">
-                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#app" href="#">
-                            <i class="icofont-code-alt fs-5"></i> <span>Schedule</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span>
-                        </a>
+                        @* <a class="m-link" data-bs-toggle="collapse" data-bs-target="#app" href="#"> *@
+                        @*     <i class="icofont-code-alt fs-5"></i> <span>Schedule</span> <span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span> *@
+                        @* </a> *@
                         <!-- Menu: Sub menu ul -->
                         <ul class="sub-menu collapse" id="app">
                             <li><a class="ms-link" href="calendar.html">Calandar</a></li>
