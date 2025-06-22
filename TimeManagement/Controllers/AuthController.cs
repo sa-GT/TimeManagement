@@ -37,8 +37,6 @@ namespace TimeManagement.Controllers
                     u.Password == model.Password);
             }
 
-          
-
             if (user == null)
             {
                 ViewBag.Error = "❌ Invalid credentials";

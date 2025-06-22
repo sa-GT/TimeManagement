@@ -8,12 +8,12 @@ namespace TimeManagement.Controllers.Habib
 	public class HAdminController : Controller
 	{
 		private readonly MyDbContext myDbContext;
-		private readonly IWebHostEnvironment _env; 
+		private readonly IWebHostEnvironment _env;
 
-		public HAdminController(MyDbContext myDbContext, IWebHostEnvironment env) 
+		public HAdminController(MyDbContext myDbContext, IWebHostEnvironment env)
 		{
 			this.myDbContext = myDbContext;
-			this._env = env; 
+			this._env = env;
 		}
 		public async Task<IActionResult> Projectlist()
 		{
@@ -21,14 +21,14 @@ namespace TimeManagement.Controllers.Habib
 			var all_project_memmber = await myDbContext.ProjectMembers.ToListAsync();
 			var all_users = await myDbContext.Users.ToListAsync();
 			var all_projectsDocs = await myDbContext.ProjectDocuments.ToListAsync();
-			var model = Tuple.Create(all_projects, all_project_memmber, all_users,all_projectsDocs);
+			var model = Tuple.Create(all_projects, all_project_memmber, all_users, all_projectsDocs);
 			return View(model);
 		}
 		[HttpPost]
 		public async Task<IActionResult> AddProject(Project project, List<IFormFile> Documents)
 		{
-            project.ManagerId = HttpContext.Session.GetInt32("UserId") ?? 0;
-            project.Status = "active";
+			project.ManagerId = HttpContext.Session.GetInt32("UserId") ?? 0;
+			project.Status = "active";
 
 			myDbContext.Projects.Add(project);
 			await myDbContext.SaveChangesAsync();
@@ -79,9 +79,9 @@ namespace TimeManagement.Controllers.Habib
 						FilePath = "/uploads/project_docs/" + uniqueFileName
 					};
 
-                    myDbContext.ProjectDocuments.Add(doc);
-                }
-            }
+					myDbContext.ProjectDocuments.Add(doc);
+				}
+			}
 
 			await myDbContext.SaveChangesAsync();
 
@@ -222,7 +222,7 @@ namespace TimeManagement.Controllers.Habib
 		}
 		public IActionResult DeleteEmployee(IFormCollection form)
 		{
-			var id = form["id"];
+			var id = int.Parse(form["id"]);
 			var user = myDbContext.Users.Find(id);
 			if (user != null)
 			{
@@ -230,6 +230,31 @@ namespace TimeManagement.Controllers.Habib
 				myDbContext.SaveChanges();
 			}
 			return RedirectToAction("ViewAllEmployee");
+		}
+		public IActionResult AddnewEmployee(int SelectedUserId, ProjectMember pm, IFormCollection form)
+		{
+			var ProjectId = int.Parse(form["ProjectId"]);
+			pm.Role = "member";
+			pm.JoinDate = DateOnly.FromDateTime(DateTime.Today);
+			pm.IsActive = true;
+			pm.CreatedAt = DateTime.Now;
+			pm.UpdatedAt = DateTime.Now;
+			pm.ProjectId = ProjectId;
+			pm.UserId = SelectedUserId;
+			myDbContext.ProjectMembers.Add(pm);
+			myDbContext.SaveChanges();
+			return RedirectToAction("Projectlist");
+		}
+		public IActionResult DeleteEmployeee()
+		{
+			var id = int.Parse(Request.Form["userId"]);
+			var projectMember = myDbContext.ProjectMembers.FirstOrDefault(d=>d.UserId == id);
+			if (projectMember != null)
+			{
+				myDbContext.ProjectMembers.Remove(projectMember);
+				myDbContext.SaveChanges();
+			}
+			return RedirectToAction("Projectlist");
 		}
 	}
 }

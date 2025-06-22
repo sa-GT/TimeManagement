@@ -1,7 +1,7 @@
 ﻿  @model Tuple<List<Project>,List<ProjectMember>,List<User>,List<ProjectDocument>> 
-  @{
+@{
     Layout = "~/views/shared/_dashboard.cshtml";
-  }
+}
 <div id="timetracker-layout" class="theme-indigo">
     <!-- main body area -->
     <div class="main px-lg-4 px-md-4">
@@ -31,6 +31,78 @@
                                 <div class="row g-3 gy-5 py-3 row-deck">
                                     @foreach (var s in Model.Item1)
                                     {
+                                        <!-- Modal: Manage Project Employees -->
+                                        <div class="modal fade" id="manageProjectEmployees_@s.Id" tabindex="-1" aria-labelledby="manageProjectEmployeesLabel_@s.Id" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content shadow">
+                                                    <div class="modal-header bg-dark text-white">
+                                                        <h5 class="modal-title fw-bold" id="manageProjectEmployeesLabel">Manage Project Employees</h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        <form asp-action="AddnewEmployee">
+                                                            <!-- Section: Add Employee to Project -->
+                                                            <input type="hidden" id="projectIdHiddenField" name="ProjectId" />
+                                                            <div class="mb-4">
+                                                                <h6 class="fw-bold mb-3">Add Employee</h6>
+                                                                <div class="row g-2">
+
+                                                                    <div class="col-md-9">
+                                                                        @{
+                                                                            int currentProjectId = s.Id;
+                                                                            var assignedUserIds = Model.Item2
+                                                                            .Where(pm => pm.ProjectId == currentProjectId)
+                                                                            .Select(pm => pm.UserId);
+
+                                                                            var availableUsers = Model.Item3
+                                                                            .Where(u => u.ManagerId == Context.Session.GetInt32("UserId") && !assignedUserIds.Contains(u.Id))
+                                                                            .ToList();
+                                                                        }
+                                                                        <select class="form-select" id="employeeSelect_@s.Id" name="SelectedUserId" required>
+                                                                            <option disabled selected>-- Select Employee --</option>
+                                                                            @foreach (var user in availableUsers)
+                                                                            {
+                                                                                <option value="@user.Id">@user.FirstName @user.LastName</option>
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <input type="hidden" id="projectIdHiddenField" name="ProjectId" value="@s.Id" />
+                                                                        <button type="submit" class="btn btn-success w-100">Add</button>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <!-- Section: Current Project Members -->
+                                                        <h6 class="fw-bold mb-3">Project Members</h6>
+                                                        <ul class="list-group">
+                                                                @foreach (var member in Model.Item2.Where(m => m.ProjectId == s.Id))
+                                                                {
+                                                                    foreach (var user in Model.Item3.Where(H => H.Id == member.UserId)){
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <img src="@user.ProfilePicture" alt="user" class="rounded-circle me-3" style="width: 40px; height: 40px;">
+                                                                            <div>
+                                                                                <div class="fw-bold">@user.FirstName @user.LastName</div>
+                                                                                <div class="text-muted small">@user.Email</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <form asp-action="DeleteEmployeee" asp-controller="HAdmin" method="post">
+                                                                            <input type="hidden" name="userId" value="@user.Id" />
+                                                                            <button class="btn btn-outline-danger btn-sm" type="submit">
+                                                                                <i class="fas fa-user-times me-1"></i> Remove
+                                                                            </button>
+                                                                        </form>
+                                                                    </li>
+                                                                    }
+                                                                }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         int? durationDays = null;
                                         if (s.StartDate.HasValue && s.EndDate.HasValue)
                                         {
@@ -60,7 +132,6 @@
                                                                 }
                                                                 <i class="@iconClass"></i>
                                                             </div>
-
                                                             <span class="small text-muted project_name fw-bold"> @s.Name</span>
                                                             <h6 class="mb-0 fw-bold  fs-5  mb-2">@s.Description</h6>
                                                             @if (Model.Item4 != null)
@@ -127,7 +198,11 @@
                                                                     <img class="avatar rounded-circle sm" src="@user.ProfilePicture" a  lt="">
                                                                 }
                                                             }
-                                                            <span class="avatar rounded-circle text-center pointer sm" data-bs-toggle="modal" data-bs-target="#addUser"><i class="icofont-ui-add"></i></span>
+                                                            <span class="avatar rounded-circle text-center pointer sm"
+                                                                  data-bs-toggle="modal"
+                                                                  data-bs-target="#manageProjectEmployees_@s.Id">
+                                                                <i class="icofont-ui-add"></i>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                     <div class="row g-2 pt-4">

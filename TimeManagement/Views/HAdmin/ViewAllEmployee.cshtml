@@ -245,7 +245,7 @@
                                                         <button type="button" class="btn btn-outline-secondary"><i class="icofont-edit text-success"></i></button>
                                                         <form asp-action="DeleteEmployee">
 															<input type="hidden" name="id" value="@s.Id" />
-                                                            <button type="button" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
+                                                            <button type="submit" class="btn btn-outline-secondary deleterow"><i class="icofont-ui-delete text-danger"></i></button>
                                                         </form>
                                                     </div>
                                                 </td>
@@ -499,15 +499,6 @@
                         { targets: [-1, -3], className: 'dt-body-right' }
                     ]
                 });
-                $('.deleterow').on('click',function(){
-                var tablename = $(this).closest('table').DataTable();
-                tablename
-                        .row( $(this)
-                        .parents('tr') )
-                        .remove()
-                        .draw();
-
-                } );
             });
         </script>
     }

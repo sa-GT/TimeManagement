@@ -59,18 +59,20 @@
                             </ul>
                         </li>
                     }
-                    <li class="collapsed">
-                        <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-report" href="#">
-                            <i class="icofont-chart-pie fs-5"></i><span>Reports</span><span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span>
-                        </a>
-                        <!-- Menu: Sub menu ul -->
-                        <ul class="sub-menu collapse" id="menu-report">
-                            <li><a class="ms-link" asp-action="Attendance" asp-controller="Attendance">Attendance</a></li>
-                            @* <li><a class="ms-link" href="hourstrack.html">Hours Tracked</a></li> *@
-                            @* <li><a class="ms-link" href="timeline.html">Timeline</a></li> *@
-                            @* <li><a class="ms-link" href="employee-logs.html">Employee Logs</a></li> *@
-                        </ul>
-                    </li>
+                    @if(role?.ToLower()!="admin"){
+                        <li class="collapsed">
+                            <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-report" href="#">
+                                <i class="icofont-chart-pie fs-5"></i><span>Reports</span><span class="arrow icofont-rounded-down ms-auto text-end fs-5"></span>
+                            </a>
+                            <!-- Menu: Sub menu ul -->
+                            <ul class="sub-menu collapse" id="menu-report">
+                                <li><a class="ms-link" asp-action="Attendance" asp-controller="Attendance">Attendance</a></li>
+                                @* <li><a class="ms-link" href="hourstrack.html">Hours Tracked</a></li> *@
+                                @* <li><a class="ms-link" href="timeline.html">Timeline</a></li> *@
+                                @* <li><a class="ms-link" href="employee-logs.html">Employee Logs</a></li> *@
+                            </ul>
+                        </li>
+                    }
                     @* <li><a class="m-link" href="screencasts.html"><i class="icofont-computer fs-5"></i> <span>Screencasts</span></a></li> *@
                     <li class="collapsed">
                         <a class="m-link" data-bs-toggle="collapse" data-bs-target="#menu-order" href="#">
